@@ -1,0 +1,11 @@
+.idea/
+cmake-*/
+*.json
+*.py
+!tools/*.json
+!tools/*.py
+.vscode/
+build/
+third_party/
+venv
+*Kibana/.antlr
