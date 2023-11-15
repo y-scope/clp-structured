@@ -106,7 +106,7 @@ static void append_padded_value(int value, char padding_character, size_t length
 static void
 append_padded_value_notz(int value, char padding_character, size_t max_length, string& str) {
     string value_str = to_string(value);
-    if (value_str == "0") {
+    if ("0" == value_str) {
         return;
     }
 
@@ -175,7 +175,7 @@ static bool convert_string_to_number_notz(
         char c = str[ix];
         if (c < '0' || c > '9') {
             break;
-        } else if (c == '0') {
+        } else if ('0' == c) {
             trailing_zero = true;
         } else {
             trailing_zero = false;

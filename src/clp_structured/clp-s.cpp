@@ -44,7 +44,7 @@ int main(int argc, char const* argv[]) {
     po::store(parsed, parsed_command_line_options);
     po::notify(parsed_command_line_options);
 
-    if (command_input == (char)Command::Compress) {
+    if ((char)Command::Compress == command_input) {
         std::vector<std::string> file_paths;
         std::string timestamp_key;
         std::string output_dir;
@@ -99,7 +99,7 @@ int main(int argc, char const* argv[]) {
         parser.parse();
         parser.store();
         parser.close();
-    } else if (command_input == (char)Command::Extract) {
+    } else if ((char)Command::Extract == command_input) {
         std::string archive_dir;
         std::string output_dir;
 
@@ -134,7 +134,7 @@ int main(int argc, char const* argv[]) {
         constructor.construct();
         constructor.store();
         constructor.close();
-    } else if (command_input == (char)Command::Search) {
+    } else if ((char)Command::Search == command_input) {
         std::string archive_dir;
         std::string query;
 
@@ -197,7 +197,7 @@ int main(int argc, char const* argv[]) {
         // the timestamp index
         auto timestamp_dict = clp_structured::ReaderUtils::read_timestamp_dictionary(archive_dir);
         clp_structured::EvaluateTimestampIndex timestamp_index(timestamp_dict);
-        if (timestamp_index.run(expr) == clp_structured::EvaluatedValue::False) {
+        if (clp_structured::EvaluatedValue::False == timestamp_index.run(expr)) {
             return 1;
         }
 
