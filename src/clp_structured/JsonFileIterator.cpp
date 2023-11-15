@@ -24,7 +24,7 @@ JsonFileIterator::JsonFileIterator(std::string const& file_name, size_t buf_size
 
 JsonFileIterator::~JsonFileIterator() {
     delete[] m_buf;
-    if (!m_reader.is_open()) {
+    if (false == m_reader.is_open()) {
         m_reader.close();
     }
 }
@@ -66,13 +66,13 @@ void JsonFileIterator::read_new_json(size_t truncated_bytes) {
     // only implements != so this is equivalent to
     // if no json available from buffer and we haven't hit eof
     // then retry reading the json with a larger buffer up to eof
-    if (!(m_doc_it != m_stream.end()) && !m_eof) {
+    if (false == (m_doc_it != m_stream.end()) && false == m_eof) {
         read_new_json(m_stream.truncated_bytes());
     }
 }
 
 bool JsonFileIterator::get_json(simdjson::ondemand::document_stream::iterator& it) {
-    if (!m_first_read) {
+    if (false == m_first_read) {
         ++m_doc_it;
     } else {
         m_first_read = false;

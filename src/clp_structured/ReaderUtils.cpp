@@ -146,7 +146,7 @@ std::shared_ptr<TimestampDictionaryReader> ReaderUtils::read_local_timestamp_dic
 std::vector<std::string> ReaderUtils::get_archives(std::string const& archive_dir) {
     std::vector<std::string> archive_paths;
 
-    if (!boost::filesystem::is_directory(archive_dir)) {
+    if (false == boost::filesystem::is_directory(archive_dir)) {
         throw OperationFailed(ErrorCodeBadParam, __FILENAME__, __LINE__);
     }
 
@@ -171,7 +171,7 @@ std::vector<int32_t> ReaderUtils::get_schemas(std::string const& archive_path) {
     for (; iter != end; ++iter) {
         if (boost::filesystem::is_regular_file(iter->path())) {
             std::string schema = iter->path().rbegin()->string();
-            if (!schema.empty() && std::all_of(schema.begin(), schema.end(), ::isdigit)) {
+            if (false == schema.empty() && std::all_of(schema.begin(), schema.end(), ::isdigit)) {
                 schemas.push_back(std::stoi(schema));
             }
         }

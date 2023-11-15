@@ -21,7 +21,7 @@ std::shared_ptr<Expression> OrOfAndForm::run(std::shared_ptr<Expression>& expr) 
     }
 
     // only need to further simplify and/or expressions
-    if (!expr->has_only_expression_operands()) {
+    if (false == expr->has_only_expression_operands()) {
         return expr;
     }
 

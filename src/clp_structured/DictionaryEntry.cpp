@@ -160,7 +160,7 @@ void LogTypeDictionaryEntry::decode_log_type(string& escaped_value) {
         }
     }
 
-    if (!constant.empty()) {
+    if (false == constant.empty()) {
         add_constant(constant, 0, constant.length());
     }
 

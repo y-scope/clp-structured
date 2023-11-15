@@ -206,7 +206,7 @@ ErrorCode ZstdDecompressor::open(std::string const& compressed_file_path) {
     memory_map_params.hint = m_memory_mapped_compressed_file.data(
     );  // Try to map it to the same memory location as previous memory mapped file
     m_memory_mapped_compressed_file.open(memory_map_params);
-    if (!m_memory_mapped_compressed_file.is_open()) {
+    if (false == m_memory_mapped_compressed_file.is_open()) {
         SPDLOG_ERROR(
                 "ZstdDecompressor: Unable to memory map the compressed file with path: {}",
                 compressed_file_path.c_str()

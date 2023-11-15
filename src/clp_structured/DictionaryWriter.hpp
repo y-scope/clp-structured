@@ -123,7 +123,7 @@ void DictionaryWriter<DictionaryIdType, EntryType>::open(
 
 template <typename DictionaryIdType, typename EntryType>
 void DictionaryWriter<DictionaryIdType, EntryType>::close() {
-    if (!m_is_open) {
+    if (false == m_is_open) {
         throw OperationFailed(ErrorCodeNotInit, __FILENAME__, __LINE__);
     }
 
@@ -138,7 +138,7 @@ void DictionaryWriter<DictionaryIdType, EntryType>::close() {
 
 template <typename DictionaryIdType, typename EntryType>
 void DictionaryWriter<DictionaryIdType, EntryType>::write_header_and_flush_to_disk() {
-    if (!m_is_open) {
+    if (false == m_is_open) {
         throw OperationFailed(ErrorCodeNotInit, __FILENAME__, __LINE__);
     }
 

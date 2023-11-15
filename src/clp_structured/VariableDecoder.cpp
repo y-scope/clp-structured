@@ -33,7 +33,7 @@ bool VariableDecoder::decode_variables_into_message(
                 .append(logtype_value, constant_begin_pos, var_position - constant_begin_pos);
 
         if (LogTypeDictionaryEntry::VarDelim::NonDouble == var_delim) {
-            if (!is_var_dict_id(encoded_vars[i])) {
+            if (false == is_var_dict_id(encoded_vars[i])) {
                 decompressed_msg += std::to_string(encoded_vars[i]);
             } else {
                 auto var_dict_id = decode_var_dict_id(encoded_vars[i]);

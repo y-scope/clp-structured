@@ -24,7 +24,7 @@ bool StringLiteral::as_clp_string(std::string& ret, FilterOperation op) {
         return false;
     }
 
-    if (!matches_type(LiteralType::ClpStringT)) {
+    if (false == matches_type(LiteralType::ClpStringT)) {
         return false;
     }
 
@@ -39,7 +39,7 @@ bool StringLiteral::as_var_string(std::string& ret, FilterOperation op) {
         return false;
     }
 
-    if (!matches_type(LiteralType::VarStringT)) {
+    if (false == matches_type(LiteralType::VarStringT)) {
         return false;
     }
 
@@ -56,13 +56,13 @@ bool StringLiteral::as_float(double& ret, FilterOperation op) {
 bool StringLiteral::as_int(int64_t& ret, FilterOperation op) {
     std::istringstream ss(m_v);
     ss >> std::noskipws >> ret;
-    if (!ss.fail() && ss.eof()) {
+    if (false == ss.fail() && ss.eof()) {
         return true;
     } else {
         double tmp;
         ss = std::istringstream(m_v);
         ss >> std::noskipws >> tmp;
-        if (!ss.fail() && ss.eof()) {
+        if (false == ss.fail() && ss.eof()) {
             return double_as_int(tmp, op, ret);
         }
     }

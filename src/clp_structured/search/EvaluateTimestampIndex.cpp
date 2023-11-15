@@ -46,7 +46,7 @@ EvaluatedValue EvaluateTimestampIndex::run(std::shared_ptr<Expression> const& ex
         return expr->is_inverted() ? EvaluatedValue::False : EvaluatedValue::True;
     } else if (auto filter = std::dynamic_pointer_cast<FilterExpr>(expr)) {
         auto column = filter->get_column();
-        if (!column->matches_any(cDateTypes)) {
+        if (false == column->matches_any(cDateTypes)) {
             return EvaluatedValue::Unknown;
         }
 
@@ -69,7 +69,7 @@ EvaluatedValue EvaluateTimestampIndex::run(std::shared_ptr<Expression> const& ex
                     break;
                 }
             }
-            if (!matched) {
+            if (false == matched) {
                 continue;
             }
 

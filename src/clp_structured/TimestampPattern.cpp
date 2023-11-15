@@ -345,7 +345,7 @@ bool TimestampPattern::parse_timestamp(
     size_t format_ix = 0;
     bool is_specifier = false;
     for (; format_ix < format_length && line_ix < line_length; ++format_ix) {
-        if (!is_specifier) {
+        if (false == is_specifier) {
             if ('%' == m_format[format_ix]) {
                 is_specifier = true;
             } else {
@@ -373,7 +373,7 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (!convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
+                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
                         || value < 0 || value > 99)
                     {
                         return false;
@@ -398,7 +398,7 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (!convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
+                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
                         || value < 0 || value > 9999)
                     {
                         return false;
@@ -419,7 +419,7 @@ bool TimestampPattern::parse_timestamp(
                             line_ix += length;
                         }
                     }
-                    if (!match_found) {
+                    if (false == match_found) {
                         return false;
                     }
 
@@ -436,7 +436,7 @@ bool TimestampPattern::parse_timestamp(
                             line_ix += length;
                         }
                     }
-                    if (!match_found) {
+                    if (false == match_found) {
                         return false;
                     }
 
@@ -451,7 +451,7 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (!convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
+                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
                         || value < 1 || value > 12)
                     {
                         return false;
@@ -470,7 +470,7 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (!convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
+                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
                         || value < 1 || value > 31)
                     {
                         return false;
@@ -489,7 +489,7 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (!convert_string_to_number(line, line_ix, line_ix + cFieldLength, ' ', value)
+                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, ' ', value)
                         || value < 1 || value > 31)
                     {
                         return false;
@@ -509,7 +509,7 @@ bool TimestampPattern::parse_timestamp(
                             line_ix += abbrev_length;
                         }
                     }
-                    if (!match_found) {
+                    if (false == match_found) {
                         return false;
                     }
                     // Weekday is not useful in determining absolute timestamp, so we don't do
@@ -539,7 +539,7 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (!convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
+                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
                         || value < 0 || value > 23)
                     {
                         return false;
@@ -558,7 +558,7 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (!convert_string_to_number(line, line_ix, line_ix + cFieldLength, ' ', value)
+                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, ' ', value)
                         || value < 0 || value > 23)
                     {
                         return false;
@@ -577,7 +577,7 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (!convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
+                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
                         || value < 1 || value > 12)
                     {
                         return false;
@@ -597,7 +597,7 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (!convert_string_to_number(line, line_ix, line_ix + cFieldLength, ' ', value)
+                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, ' ', value)
                         || value < 1 || value > 12)
                     {
                         return false;
@@ -617,7 +617,7 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (!convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
+                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
                         || value < 0 || value > 59)
                     {
                         return false;
@@ -636,7 +636,7 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (!convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
+                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
                         || value < 0 || value > 60)
                     {
                         return false;
@@ -655,7 +655,7 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (!convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
+                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
                         || value < 0 || value > 999)
                     {
                         return false;
@@ -703,7 +703,7 @@ bool TimestampPattern::parse_timestamp(
     if (uses_12_hour_clock) {
         if (12 == hour) {
             // 12s require special handling
-            if (!is_pm) {
+            if (false == is_pm) {
                 // hour == 12AM which is 0 on 24-hour clock
                 hour = 0;
             }
@@ -717,7 +717,7 @@ bool TimestampPattern::parse_timestamp(
 
     // Create complete date
     auto year_month_date = date::year(year) / month / date;
-    if (!year_month_date.ok()) {
+    if (false == year_month_date.ok()) {
         return false;
     }
     // Convert complete timestamp into a time point with millisecond resolution
@@ -790,7 +790,7 @@ void TimestampPattern::insert_formatted_timestamp(epochtime_t timestamp, string&
     size_t const format_length = m_format.length();
     bool is_specifier = false;
     for (size_t format_ix = 0; format_ix < format_length; ++format_ix) {
-        if (!is_specifier) {
+        if (false == is_specifier) {
             if ('%' == m_format[format_ix]) {
                 is_specifier = true;
             } else {

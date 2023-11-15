@@ -111,7 +111,7 @@ void DictionaryReader<DictionaryIdType, EntryType>::open(std::string const& dict
 
 template <typename DictionaryIdType, typename EntryType>
 void DictionaryReader<DictionaryIdType, EntryType>::close() {
-    if (!m_is_open) {
+    if (false == m_is_open) {
         throw OperationFailed(ErrorCodeNotReady, __FILENAME__, __LINE__);
     }
 
@@ -123,7 +123,7 @@ void DictionaryReader<DictionaryIdType, EntryType>::close() {
 
 template <typename DictionaryIdType, typename EntryType>
 void DictionaryReader<DictionaryIdType, EntryType>::read_new_entries(bool lazy) {
-    if (!m_is_open) {
+    if (false == m_is_open) {
         throw OperationFailed(ErrorCodeNotInit, __FILENAME__, __LINE__);
     }
 
@@ -153,7 +153,7 @@ void DictionaryReader<DictionaryIdType, EntryType>::read_new_entries(bool lazy) 
 template <typename DictionaryIdType, typename EntryType>
 EntryType const& DictionaryReader<DictionaryIdType, EntryType>::get_entry(DictionaryIdType id
 ) const {
-    if (!m_is_open) {
+    if (false == m_is_open) {
         throw OperationFailed(ErrorCodeNotInit, __FILENAME__, __LINE__);
     }
     if (id >= m_entries.size()) {
@@ -177,7 +177,7 @@ EntryType const* DictionaryReader<DictionaryIdType, EntryType>::get_entry_matchi
         std::string const& search_string,
         bool ignore_case
 ) const {
-    if (!ignore_case) {
+    if (false == ignore_case) {
         for (auto const& entry : m_entries) {
             if (entry.get_value() == search_string) {
                 return &entry;

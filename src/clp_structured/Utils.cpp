@@ -8,7 +8,7 @@ using std::string_view;
 namespace clp_structured {
 bool FileUtils::find_all_files(std::string const& path, std::vector<std::string>& file_paths) {
     try {
-        if (!boost::filesystem::is_directory(path)) {
+        if (false == boost::filesystem::is_directory(path)) {
             // path is a file
             file_paths.push_back(path);
             return true;
@@ -50,7 +50,7 @@ bool FileUtils::find_all_files(std::string const& path, std::vector<std::string>
 bool FileUtils::validate_path(std::vector<std::string> const& paths) {
     bool all_paths_exist = true;
     for (auto const& path : paths) {
-        if (!boost::filesystem::exists(path)) {
+        if (false == boost::filesystem::exists(path)) {
             SPDLOG_ERROR("'{}' does not exist.", path.c_str());
             all_paths_exist = false;
         }
@@ -69,7 +69,7 @@ bool StringUtils::get_bounds_of_next_var(string const& msg, size_t& begin_pos, s
         begin_pos = end_pos;
         // Find next non-delimiter
         for (; begin_pos < msg_length; ++begin_pos) {
-            if (!is_delim(msg[begin_pos])) {
+            if (false == is_delim(msg[begin_pos])) {
                 break;
             }
         }
@@ -334,7 +334,7 @@ bool StringUtils::wildcard_match_unsafe_case_sensitive(string_view tame, string_
 
             // Handle a mismatch
             t = *tame_current;
-            if (!((!is_escaped && '?' == w) || t == w)) {
+            if (false == ((false == is_escaped && '?' == w) || t == w)) {
                 if (nullptr == wild_bookmark) {
                     // No bookmark to return to
                     return false;

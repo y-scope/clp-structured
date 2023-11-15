@@ -16,12 +16,12 @@ void ArchiveWriter::open(ArchiveWriterOption const& option) {
     }
 
     m_archive_path = archive_path.string();
-    if (!boost::filesystem::create_directory(m_archive_path)) {
+    if (false == boost::filesystem::create_directory(m_archive_path)) {
         throw OperationFailed(ErrorCodeErrno, __FILENAME__, __LINE__);
     }
 
     m_encoded_messages_dir = m_archive_path + "/encoded_messages";
-    if (!boost::filesystem::create_directory(m_encoded_messages_dir)) {
+    if (false == boost::filesystem::create_directory(m_encoded_messages_dir)) {
         throw OperationFailed(ErrorCodeErrno, __FILENAME__, __LINE__);
     }
 

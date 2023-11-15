@@ -17,7 +17,7 @@ void TimestampDictionaryReader::open(std::string const& dictionary_path) {
 }
 
 void TimestampDictionaryReader::close() {
-    if (!m_is_open) {
+    if (false == m_is_open) {
         throw OperationFailed(ErrorCodeNotInit, __FILENAME__, __LINE__);
     }
 
@@ -30,7 +30,7 @@ void TimestampDictionaryReader::read_local_entries() {
 }
 
 void TimestampDictionaryReader::read_new_entries(bool local) {
-    if (!m_is_open) {
+    if (false == m_is_open) {
         throw OperationFailed(ErrorCodeNotInit, __FILENAME__, __LINE__);
     }
 

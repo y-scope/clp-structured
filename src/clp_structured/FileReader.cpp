@@ -97,7 +97,7 @@ ErrorCode
 FileReader::try_read_to_delimiter(char delim, bool keep_delimiter, bool append, string& str) {
     assert(nullptr != m_file);
 
-    if (!append) {
+    if (false == append) {
         str.clear();
     }
     ssize_t num_bytes_read = getdelim(&m_getdelim_buf, &m_getdelim_buf_len, delim, m_file);
@@ -108,7 +108,7 @@ FileReader::try_read_to_delimiter(char delim, bool keep_delimiter, bool append, 
             return ErrorCodeEndOfFile;
         }
     }
-    if (!keep_delimiter && delim == m_getdelim_buf[num_bytes_read - 1]) {
+    if (false == keep_delimiter && delim == m_getdelim_buf[num_bytes_read - 1]) {
         --num_bytes_read;
     }
     str.append(m_getdelim_buf, num_bytes_read);

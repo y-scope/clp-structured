@@ -84,7 +84,7 @@ bool VariableEncoder::convert_string_to_representable_integer_var(
 
     int64_t result;
     // Conversion failed or value is in dictionary variable range, so cannot be converted
-    if (!convert_string_to_int64(value, result) || result >= cVarDictIdRangeBegin) {
+    if (false == convert_string_to_int64(value, result) || result >= cVarDictIdRangeBegin) {
         return false;
     } else {
         encoded_var = result;

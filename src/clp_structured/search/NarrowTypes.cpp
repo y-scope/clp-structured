@@ -37,37 +37,37 @@ std::shared_ptr<Expression> NarrowTypes::narrow(std::shared_ptr<Expression> cur)
         double tmpdouble;
         bool tmpbool;
 
-        if (!literal->as_any(op)) {
-            if (!literal->as_clp_string(tmpstring, op)) {
+        if (false == literal->as_any(op)) {
+            if (false == literal->as_clp_string(tmpstring, op)) {
                 column->remove_matching_type(LiteralType::ClpStringT);
             }
-            if (!literal->as_var_string(tmpstring, op)) {
+            if (false == literal->as_var_string(tmpstring, op)) {
                 column->remove_matching_type(LiteralType::VarStringT);
             }
-            if (!literal->as_int(tmpint, op)) {
+            if (false == literal->as_int(tmpint, op)) {
                 column->remove_matching_type(LiteralType::IntegerT);
             }
-            if (!literal->as_float(tmpdouble, op)) {
+            if (false == literal->as_float(tmpdouble, op)) {
                 column->remove_matching_type(LiteralType::FloatT);
             }
-            if (!literal->as_bool(tmpbool, op)) {
+            if (false == literal->as_bool(tmpbool, op)) {
                 column->remove_matching_type(LiteralType::BooleanT);
             }
-            if (!literal->as_array(tmpstring, op)) {
+            if (false == literal->as_array(tmpstring, op)) {
                 column->remove_matching_type(LiteralType::ArrayT);
             }
-            if (!literal->as_null(op)) {
+            if (false == literal->as_null(op)) {
                 column->remove_matching_type(LiteralType::NullT);
             }
-            if (!literal->as_epoch_date()) {
+            if (false == literal->as_epoch_date()) {
                 column->remove_matching_type(LiteralType::EpochDateT);
             }
-            if (!literal->as_float_date()) {
+            if (false == literal->as_float_date()) {
                 column->remove_matching_type(LiteralType::EpochDateT);
             }
         }
 
-        if (!column->matches_any(cAllTypes)) {
+        if (false == column->matches_any(cAllTypes)) {
             return EmptyExpr::create();
         }
     }

@@ -170,7 +170,7 @@ bool Output::filter(
     }
 
     // filter
-    if (!evaluate(m_expr.get(), m_schema, extracted_values)) {
+    if (false == evaluate(m_expr.get(), m_schema, extracted_values)) {
         return false;
     }
 
@@ -218,7 +218,7 @@ bool Output::evaluate(
     do {
         switch (cur_type) {
             case CurExpr::AND:
-                if (!ret || parent_it.top() == cur->op_end()) {
+                if (false == ret || parent_it.top() == cur->op_end()) {
                     parent_type.pop();
                     parent_it.pop();
                     break;
@@ -269,7 +269,7 @@ bool Output::evaluate(
         }
 
         ret = cur->is_inverted() ? !ret : ret;
-        if (!parent_type.empty()) {
+        if (false == parent_type.empty()) {
             cur_type = parent_type.top();
         }
         cur = cur->get_parent();
@@ -437,7 +437,7 @@ bool Output::evaluate_int_filter(
     }
 
     int64_t op_value;
-    if (!operand->as_int(op_value, op)) {
+    if (false == operand->as_int(op_value, op)) {
         return false;
     }
 
@@ -469,7 +469,7 @@ bool Output::evaluate_float_filter(
     }
 
     double op_value;
-    if (!operand->as_float(op_value, op)) {
+    if (false == operand->as_float(op_value, op)) {
         return false;
     }
 
@@ -578,7 +578,7 @@ bool Output::evaluate_array_filter(
         if (value.is_array()) {
             match |= evaluate_array_filter(value, op, unresolved_tokens, cur_idx, operand, true);
         } else if (value.is_object()) {
-            if (!array_or_object && cur_idx < unresolved_tokens.size()
+            if (false == array_or_object && cur_idx < unresolved_tokens.size()
                 && i.key() == unresolved_tokens[cur_idx].get_token())
             {
                 match |= evaluate_array_filter(
@@ -672,7 +672,7 @@ bool Output::evaluate_wildcard_array_filter(
                 }
             } break;
             case ondemand::json_type::string: {
-                if (!m_maybe_string) {
+                if (false == m_maybe_string) {
                     break;
                 }
                 if (wildcard_match(item.get_string().value(), m_array_search_string)) {
@@ -681,7 +681,7 @@ bool Output::evaluate_wildcard_array_filter(
                 break;
             } break;
             case ondemand::json_type::number: {
-                if (!m_maybe_number) {
+                if (false == m_maybe_number) {
                     break;
                 }
                 ondemand::number number = item.get_number();
@@ -741,7 +741,7 @@ bool Output::evaluate_wildcard_array_filter(
                 }
             } break;
             case ondemand::json_type::string: {
-                if (!m_maybe_string) {
+                if (false == m_maybe_string) {
                     break;
                 }
                 if (wildcard_match(item.get_string().value(), m_array_search_string)) {
@@ -750,7 +750,7 @@ bool Output::evaluate_wildcard_array_filter(
                 break;
             } break;
             case ondemand::json_type::number: {
-                if (!m_maybe_number) {
+                if (false == m_maybe_number) {
                     break;
                 }
                 ondemand::number number = item.get_number();
@@ -798,7 +798,7 @@ bool Output::evaluate_bool_filter(
     }
 
     bool op_value;
-    if (!operand->as_bool(op_value, op)) {
+    if (false == operand->as_bool(op_value, op)) {
         return false;
     }
 
@@ -893,7 +893,7 @@ void Output::populate_searched_wildcard_columns(std::shared_ptr<Expression> cons
         }
     } else if (auto filter = std::dynamic_pointer_cast<FilterExpr>(expr)) {
         auto col = filter->get_column().get();
-        if (!col->is_pure_wildcard()) {
+        if (false == col->is_pure_wildcard()) {
             return;
         }
         for (int32_t node : (*m_schemas)[m_schema]) {
@@ -1039,7 +1039,7 @@ Output::constant_propagate(std::shared_ptr<Expression> const& expr, int32_t sche
                               filter_string,
                               filter->get_operation()
                       );
-            if (!valid) {
+            if (false == valid) {
                 // FIXME: throw
                 return EvaluatedValue::False;
             }
@@ -1057,10 +1057,10 @@ Output::constant_propagate(std::shared_ptr<Expression> const& expr, int32_t sche
             }
 
             if (filter->get_operation() == FilterOperation::EQ) {
-                if (!matches_clp_string) {
+                if (false == matches_clp_string) {
                     m_wildcard_to_searched_clpstrings[wildcard].clear();
                 }
-                if (!matches_var_string) {
+                if (false == matches_var_string) {
                     m_wildcard_to_searched_varstrings[wildcard].clear();
                 }
 
@@ -1079,7 +1079,7 @@ Output::constant_propagate(std::shared_ptr<Expression> const& expr, int32_t sche
                 if (has_clp_string && !matches_clp_string || has_var_string && !matches_var_string)
                 {
                     return filter->is_inverted() ? EvaluatedValue::False : EvaluatedValue::True;
-                } else if (!has_clp_string && !has_var_string && !has_other) {
+                } else if (false == has_clp_string && false == has_var_string && !has_other) {
                     return EvaluatedValue::False;
                 }
             } else {

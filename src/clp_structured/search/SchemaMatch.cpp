@@ -30,7 +30,7 @@ std::shared_ptr<Expression> SchemaMatch::run(std::shared_ptr<Expression>& expr) 
 
     // if we had ambiguous column descriptors containing regex which were
     // resolved we need to restandardize the expression
-    if (!m_unresolved_descriptor_to_descriptor.empty()) {
+    if (false == m_unresolved_descriptor_to_descriptor.empty()) {
         m_column_to_descriptor.clear();
         m_unresolved_descriptor_to_descriptor.clear();
 
@@ -62,10 +62,10 @@ std::shared_ptr<Expression> SchemaMatch::populate_column_mapping(std::shared_ptr
                 new_child->copy_replace(cur.get(), it);
             }
         } else if (auto column = dynamic_cast<ColumnDescriptor*>((*it).get())) {
-            if (!populate_column_mapping(column)) {
+            if (false == populate_column_mapping(column)) {
                 // no matching columns -- replace this expression with empty;
                 return EmptyExpr::create();
-            } else if (column->is_unresolved_descriptor() && !column->is_pure_wildcard()) {
+            } else if (column->is_unresolved_descriptor() && false == column->is_pure_wildcard()) {
                 auto possibilities = OrExpr::create();
 
                 // TODO: will have to decide how we wan't to handle multi-column expressions with
@@ -153,7 +153,7 @@ bool SchemaMatch::populate_column_mapping(
         {
             // potentially match current node if accepted its token
             matched = true;
-            if (!column->is_unresolved_descriptor()) {
+            if (false == column->is_unresolved_descriptor()) {
                 m_column_to_descriptor[node_id].insert(column);
             } else {
                 m_unresolved_descriptor_to_descriptor[column].insert(node_id);
@@ -172,7 +172,7 @@ bool SchemaMatch::populate_column_mapping(
         // the following case erroneously
         // tok.*.tok
         matched |= populate_column_mapping(column, next, node_id, true);
-    } else if (!wildcard_special_flag && wildcard_accepted) {
+    } else if (false == wildcard_special_flag && wildcard_accepted) {
         matched |= populate_column_mapping(column, next, node_id);
     }
 
@@ -181,7 +181,7 @@ bool SchemaMatch::populate_column_mapping(
         if (wildcard_accepted && !wildcard_special_continue) {
             matched |= populate_column_mapping(column, next, child_node_id);
             matched |= populate_column_mapping(column, it, child_node_id);
-        } else if (!wildcard_accepted) {
+        } else if (false == wildcard_accepted) {
             matched |= populate_column_mapping(column, next, child_node_id);
         }
     }
@@ -198,11 +198,11 @@ void SchemaMatch::populate_schema_mapping() {
             if (m_tree->get_node(column_id)->get_type() == NodeType::ARRAY) {
                 m_array_schema_ids.insert(schema_id);
             }
-            if (!m_column_to_descriptor.count(column_id)) {
+            if (false == m_column_to_descriptor.count(column_id)) {
                 continue;
             }
             for (auto descriptor : m_column_to_descriptor[column_id]) {
-                if (!descriptor->is_pure_wildcard()) {
+                if (false == descriptor->is_pure_wildcard()) {
                     m_descriptor_to_schema[descriptor][schema_id] = column_id;
                 }
             }
@@ -244,7 +244,7 @@ std::shared_ptr<Expression> SchemaMatch::intersect_schemas(std::shared_ptr<Expre
             m_matched_schema_ids.insert(schema);
 
             for (auto column : columns) {
-                if (!column->is_pure_wildcard()) {
+                if (false == column->is_pure_wildcard()) {
                     m_schema_to_searched_columns[schema].insert(
                             get_column_id_for_descriptor(column, schema)
                     );
@@ -275,7 +275,7 @@ bool SchemaMatch::intersect_and_sub_expr(
     for (auto it = cur->op_begin(); it != cur->op_end(); it++) {
         if (auto sub_expr = std::dynamic_pointer_cast<Expression>(*it)) {
             first &= intersect_and_sub_expr(sub_expr, common_schema, columns, first);
-            if (!first && common_schema.empty()) {
+            if (false == first && common_schema.empty()) {
                 break;
             }
         } else if (auto column = std::dynamic_pointer_cast<ColumnDescriptor>(*it)) {
@@ -301,7 +301,7 @@ bool SchemaMatch::intersect_and_sub_expr(
                 return false;
             } else if (first /*&& op == FilterOperation::NEXISTS */) {
                 for (auto& schema : *m_schemas) {
-                    if (!m_descriptor_to_schema[column.get()].count(schema.first)) {
+                    if (0 == m_descriptor_to_schema[column.get()].count(schema.first)) {
                         common_schema.insert(schema.first);
                     }
                 }
@@ -310,7 +310,7 @@ bool SchemaMatch::intersect_and_sub_expr(
                 std::set<int32_t> intersection;
                 auto const& cur_schemas = m_descriptor_to_schema[column.get()];
                 for (int32_t schema : common_schema) {
-                    if (!cur_schemas.count(schema)) {
+                    if (0 == cur_schemas.count(schema)) {
                         intersection.insert(schema);
                     }
                 }
@@ -341,7 +341,7 @@ void SchemaMatch::split_expression_by_schema(
             auto descriptor = std::static_pointer_cast<FilterExpr>(new_filter)->get_column().get();
             auto old_descriptor = filter->get_column().get();
 
-            if (!descriptor->is_pure_wildcard()) {
+            if (false == descriptor->is_pure_wildcard()) {
                 descriptor->set_column_id(get_column_id_for_descriptor(old_descriptor, schema_id));
                 auto literal_type = get_literal_type_for_column(old_descriptor, schema_id);
                 if (literal_type == LiteralType::ArrayT) {
@@ -350,7 +350,7 @@ void SchemaMatch::split_expression_by_schema(
                 descriptor->set_matching_type(literal_type);
             } else if ((descriptor->is_pure_wildcard()
                         && descriptor->matches_type(LiteralType::ArrayT)
-                        && !m_array_search_schema_ids.count(schema_id)))
+                        && 0 == m_array_search_schema_ids.count(schema_id)))
             {
                 for (auto column_id : (*m_schemas)[schema_id]) {
                     if (m_tree->get_node(column_id)->get_type() == NodeType::ARRAY) {

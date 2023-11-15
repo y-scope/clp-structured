@@ -30,13 +30,13 @@ std::shared_ptr<Literal> DateLiteral::create_from_string(std::string const& v) {
     double tmp_double_epoch;
 
     ss >> std::noskipws >> tmp_int_epoch;
-    if (!ss.fail() && ss.eof()) {
+    if (false == ss.fail() && ss.eof()) {
         return std::shared_ptr<Literal>(static_cast<Literal*>(new DateLiteral(tmp_int_epoch, v)));
     }
 
     ss = std::istringstream(v);
     ss >> std::noskipws >> tmp_double_epoch;
-    if (!ss.fail() && ss.eof()) {
+    if (false == ss.fail() && ss.eof()) {
         return std::shared_ptr<Literal>(static_cast<Literal*>(new DateLiteral(tmp_double_epoch, v))
         );
     }

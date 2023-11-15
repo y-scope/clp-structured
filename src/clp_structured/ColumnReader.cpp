@@ -80,7 +80,7 @@ std::variant<int64_t, double, std::string, uint8_t> ClpStringColumnReader::extra
     int64_t logtype_id = ClpStringColumnWriter::get_encoded_log_dict_id(value);
     auto entry = m_log_dict->get_entry(logtype_id);
 
-    if (!entry.initialized()) {
+    if (false == entry.initialized()) {
         entry.decode_log_type();
     }
 
@@ -103,7 +103,7 @@ Span<int64_t> ClpStringColumnReader::get_encoded_vars(uint64_t cur_message) {
     auto entry = m_log_dict->get_entry(logtype_id);
 
     // It should be initialized before because we are searching on this field
-    if (!entry.initialized()) {
+    if (false == entry.initialized()) {
         entry.decode_log_type();
     }
 

@@ -65,7 +65,7 @@ void TimestampDictionaryWriter::open_local(
 }
 
 void TimestampDictionaryWriter::close() {
-    if (!m_is_open) {
+    if (false == m_is_open) {
         throw OperationFailed(ErrorCodeNotInit, __FILENAME__, __LINE__);
     }
 
@@ -80,7 +80,7 @@ void TimestampDictionaryWriter::close() {
 }
 
 void TimestampDictionaryWriter::close_local() {
-    if (!m_is_open_local) {
+    if (false == m_is_open_local) {
         throw OperationFailed(ErrorCodeNotInit, __FILENAME__, __LINE__);
     }
 
@@ -96,7 +96,7 @@ void TimestampDictionaryWriter::close_local() {
 }
 
 uint64_t TimestampDictionaryWriter::get_pattern_id(TimestampPattern const* pattern) {
-    if (!m_pattern_to_id.count(pattern)) {
+    if (0 == m_pattern_to_id.count(pattern)) {
         uint64_t id = m_next_id++;
         m_pattern_to_id[pattern] = id;
 

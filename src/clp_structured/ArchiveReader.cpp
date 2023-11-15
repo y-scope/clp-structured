@@ -16,7 +16,7 @@ void ArchiveReader::open(ArchiveReaderOption& option) {
     m_array_dict->read_new_entries();
 
     std::string encoded_messages_dir = m_archive_path + "/encoded_messages";
-    if (!boost::filesystem::exists(encoded_messages_dir)) {
+    if (false == boost::filesystem::exists(encoded_messages_dir)) {
         throw OperationFailed(ErrorCodeErrno, __FILENAME__, __LINE__);
     }
 
@@ -28,7 +28,7 @@ void ArchiveReader::open(ArchiveReaderOption& option) {
     for (; iter != end; ++iter) {
         if (boost::filesystem::is_regular_file(iter->path())) {
             std::string path = iter->path().rbegin()->string();
-            if (!path.empty() && std::all_of(path.begin(), path.end(), ::isdigit)) {
+            if (false == path.empty() && std::all_of(path.begin(), path.end(), ::isdigit)) {
                 schema_ids.insert(std::stoi(path));
             }
         }

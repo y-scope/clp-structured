@@ -13,7 +13,7 @@ JsonParser::JsonParser(JsonParserOption const& option)
           m_schema_id(0),
           m_max_encoding_size(option.max_encoding_size),
           m_timestamp_column(option.timestamp_column) {
-    if (!FileUtils::validate_path(option.file_paths)) {
+    if (false == FileUtils::validate_path(option.file_paths)) {
         throw OperationFailed(ErrorCodeFileNotFound, __FILENAME__, __LINE__);
     }
 
@@ -21,7 +21,7 @@ JsonParser::JsonParser(JsonParserOption const& option)
         FileUtils::find_all_files(file_path, m_file_paths);
     }
 
-    if (!boost::filesystem::create_directory(m_output_dir)) {
+    if (false == boost::filesystem::create_directory(m_output_dir)) {
         throw OperationFailed(ErrorCodeErrno, __FILENAME__, __LINE__);
     }
 
@@ -57,7 +57,7 @@ void JsonParser::parse_line(ondemand::value line, int32_t parent_node_id, std::s
     bool matches_timestamp = false;
 
     do {
-        if (!object_stack.empty()) {
+        if (false == object_stack.empty()) {
             cur_field = *object_it_stack.top();
             cur_key = std::string(std::string_view(cur_field.unescaped_key(true)));
             line = cur_field.value();
@@ -104,7 +104,7 @@ void JsonParser::parse_line(ondemand::value line, int32_t parent_node_id, std::s
             case ondemand::json_type::number: {
                 NodeType type;
                 ondemand::number number_value = line.get_number();
-                if (!number_value.is_double()) {
+                if (false == number_value.is_double()) {
                     // FIXME: should have separate integer and unsigned
                     // integer types to handle values greater than max int64
                     type = NodeType::INTEGER;
@@ -213,7 +213,7 @@ void JsonParser::parse_line(ondemand::value line, int32_t parent_node_id, std::s
 void JsonParser::parse() {
     for (auto& file_path : m_file_paths) {
         JsonFileIterator json_file_iterator(file_path);
-        if (!json_file_iterator.is_open()) {
+        if (false == json_file_iterator.is_open()) {
             return;
         }
 

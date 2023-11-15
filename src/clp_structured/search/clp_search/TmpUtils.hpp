@@ -21,7 +21,7 @@ could_be_multi_digit_hex_value(std::string const& str, size_t begin_pos, size_t 
 
     for (size_t i = begin_pos; i < end_pos; ++i) {
         auto c = str[i];
-        if (!(('a' <= c && c <= 'f') || ('A' <= c && c <= 'F') || ('0' <= c && c <= '9'))) {
+        if (false == (('a' <= c && c <= 'f') || ('A' <= c && c <= 'F') || ('0' <= c && c <= '9'))) {
             return false;
         }
     }

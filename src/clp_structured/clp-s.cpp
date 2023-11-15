@@ -88,7 +88,7 @@ int main(int argc, char const* argv[]) {
         option.output_dir = std::move(output_dir);
         option.max_encoding_size = max_encoding_size;
         option.compression_level = compression_level;
-        if (!timestamp_key.empty()) {
+        if (false == timestamp_key.empty()) {
             clp_structured::StringUtils::tokenize_column_descriptor(
                     timestamp_key,
                     option.timestamp_column

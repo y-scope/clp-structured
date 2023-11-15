@@ -11,11 +11,11 @@ JsonConstructor::JsonConstructor(JsonConstructorOption const& option)
           m_archive_dir(option.archive_dir),
           m_current_archive_index(0),
           m_max_archive_index(0) {
-    if (!boost::filesystem::create_directory(m_output_dir)) {
+    if (false == boost::filesystem::create_directory(m_output_dir)) {
         throw OperationFailed(ErrorCodeErrno, __FILENAME__, __LINE__);
     }
 
-    if (!boost::filesystem::is_directory(m_archive_dir)) {
+    if (false == boost::filesystem::is_directory(m_archive_dir)) {
         throw OperationFailed(ErrorCodeBadParam, __FILENAME__, __LINE__);
     }
 

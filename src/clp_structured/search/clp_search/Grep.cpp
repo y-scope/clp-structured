@@ -110,8 +110,8 @@ QueryToken::QueryToken(
                 = (m_has_prefix_greedy_wildcard || m_has_suffix_greedy_wildcard
                    || m_has_greedy_wildcard_in_middle);
 
-        if (!is_var) {
-            if (!m_contains_wildcards) {
+        if (false == is_var) {
+            if (false == m_contains_wildcards) {
                 m_type = Type::Logtype;
             } else {
                 m_type = Type::Ambiguous;
@@ -142,7 +142,7 @@ QueryToken::QueryToken(
                 converts_to_non_dict_var = true;
             }
 
-            if (!converts_to_non_dict_var) {
+            if (false == converts_to_non_dict_var) {
                 // Dictionary variable
                 m_type = Type::DictOrIntVar;
                 m_cannot_convert_to_non_dict_var = true;
@@ -286,7 +286,7 @@ static bool process_var_token(
     sub_query.mark_wildcard_match_required();
 
     // Create QueryVar corresponding to token
-    if (!query_token.contains_wildcards()) {
+    if (false == query_token.contains_wildcards()) {
         if (EncodedVariableInterpreter::encode_and_search_dictionary(
                     query_token.get_value(),
                     *var_dict,
@@ -332,28 +332,6 @@ static bool process_var_token(
     return true;
 }
 
-/*
-static bool find_matching_message (const Query& query, Archive& archive, const SubQuery*&
-matching_sub_query, File& compressed_file, Message& compressed_msg) { if
-(query.contains_sub_queries()) { matching_sub_query =
-archive.find_message_matching_query(compressed_file, query, compressed_msg); if (nullptr ==
-matching_sub_query) { return false;
-        }
-    } else if (query.get_search_begin_timestamp() > cEpochTimeMin ||
-query.get_search_end_timestamp() < cEpochTimeMax) { bool found_msg =
-archive.find_message_in_time_range(compressed_file, query.get_search_begin_timestamp(),
-query.get_search_end_timestamp(), compressed_msg); if (!found_msg) { return false;
-        }
-    } else {
-        bool read_successful = archive.get_next_message(compressed_file, compressed_msg);
-        if (!read_successful) {
-            return false;
-        }
-    }
-
-    return true;
-}*/
-
 SubQueryMatchabilityResult generate_logtypes_and_vars_for_subquery(
         std::shared_ptr<LogTypeDictionaryReader> log_dict,
         std::shared_ptr<VariableDictionaryReader> var_dict, /*const Archive& archive,*/
@@ -380,7 +358,7 @@ SubQueryMatchabilityResult generate_logtypes_and_vars_for_subquery(
             // the pieces of the token on either side of each wildcard need to be processed as
             // ambiguous tokens
             sub_query.mark_wildcard_match_required();
-            if (!query_token.is_var()) {
+            if (false == query_token.is_var()) {
                 logtype += '*';
             } else {
                 logtype += '*';
@@ -388,9 +366,9 @@ SubQueryMatchabilityResult generate_logtypes_and_vars_for_subquery(
                 logtype += '*';
             }
         } else {
-            if (!query_token.is_var()) {
+            if (false == query_token.is_var()) {
                 logtype += query_token.get_value();
-            } else if (!process_var_token(query_token, var_dict, ignore_case, sub_query, logtype)) {
+            } else if (false == process_var_token(query_token, var_dict, ignore_case, sub_query, logtype)) {
                 return SubQueryMatchabilityResult::WontMatch;
             }
         }
@@ -479,7 +457,7 @@ bool Grep::process_raw_query(
     // fall-back to decompression + wildcard matching for those.
     vector<QueryToken*> ambiguous_tokens;
     for (auto& query_token : query_tokens) {
-        if (!query_token.has_greedy_wildcard_in_middle() && query_token.is_ambiguous_token()) {
+        if (false == query_token.has_greedy_wildcard_in_middle() && query_token.is_ambiguous_token()) {
             ambiguous_tokens.push_back(&query_token);
         }
     }
@@ -575,7 +553,7 @@ bool Grep::get_bounds_of_next_potential_var(
                     contains_wildcard = true;
                     break;
                 }
-                if (!StringUtils::is_delim(c)) {
+                if (false == StringUtils::is_delim(c)) {
                     break;
                 }
             }
@@ -646,7 +624,7 @@ bool Grep::get_bounds_of_next_potential_var(
                 }
             }
 
-            if (!found_wildcard_before_alphabet) {
+            if (false == found_wildcard_before_alphabet) {
                 is_var = true;
             }
         }

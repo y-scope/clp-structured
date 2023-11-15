@@ -62,7 +62,7 @@ QueryVar::QueryVar(
 
 bool QueryVar::matches(encoded_variable_t var) const {
     return (m_is_precise_var && m_precise_var == var)
-           || (!m_is_precise_var && m_possible_dict_vars.count(var) > 0);
+           || (false == m_is_precise_var && m_possible_dict_vars.count(var) > 0);
 }
 
 void SubQuery::add_non_dict_var(encoded_variable_t precise_non_dict_var) {

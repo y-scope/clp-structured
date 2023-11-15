@@ -22,7 +22,7 @@ std::shared_ptr<Literal> Integral::create_from_string(std::string const& v) {
     int64_t tmpint;
     std::istringstream ss(v);
     ss >> std::noskipws >> tmpint;
-    if (!ss.fail() && ss.eof()) {
+    if (false == ss.fail() && ss.eof()) {
         ret = new Integral(tmpint);
         ret->m_vstr = v;
         return std::shared_ptr<Literal>(static_cast<Literal*>(ret));
@@ -31,7 +31,7 @@ std::shared_ptr<Literal> Integral::create_from_string(std::string const& v) {
     double tmpdouble;
     ss = std::istringstream(v);
     ss >> std::noskipws >> tmpdouble;
-    if (!ss.fail() && ss.eof()) {
+    if (false == ss.fail() && ss.eof()) {
         ret = new Integral(tmpdouble);
         ret->m_vstr = v;
         return std::shared_ptr<Literal>(static_cast<Literal*>(ret));
@@ -41,7 +41,7 @@ std::shared_ptr<Literal> Integral::create_from_string(std::string const& v) {
 
 void Integral::print() {
     auto& os = get_print_stream();
-    if (!m_vstr.empty()) {
+    if (false == m_vstr.empty()) {
         os << m_vstr;
     } else if (std::holds_alternative<int64_t>(m_v)) {
         os << std::get<int64_t>(m_v);
@@ -60,7 +60,7 @@ bool Integral::as_var_string(std::string& ret, FilterOperation op) {
     {
         return false;
     }
-    if (!m_vstr.empty()) {
+    if (false == m_vstr.empty()) {
         ret = m_vstr;
     } else {
         std::ostringstream ss;

@@ -40,7 +40,7 @@ std::shared_ptr<Expression> ConvertToExists::convert(std::shared_ptr<Expression>
         auto op = filter->get_operation();
 
         if (op == FilterOperation::EXISTS || op == FilterOperation::NEXISTS) {
-            if (!filter->is_inverted()) {
+            if (false == filter->is_inverted()) {
                 return cur;
             }
 

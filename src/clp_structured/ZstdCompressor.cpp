@@ -93,7 +93,7 @@ void ZstdCompressor::write(char const* data, size_t data_length) {
 }
 
 void ZstdCompressor::flush() {
-    if (!m_compression_stream_contains_data) {
+    if (false == m_compression_stream_contains_data) {
         return;
     }
 
