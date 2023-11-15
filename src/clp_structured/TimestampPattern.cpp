@@ -373,7 +373,14 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
+                    if (false
+                                == convert_string_to_number(
+                                        line,
+                                        line_ix,
+                                        line_ix + cFieldLength,
+                                        '0',
+                                        value
+                                )
                         || value < 0 || value > 99)
                     {
                         return false;
@@ -398,7 +405,14 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
+                    if (false
+                                == convert_string_to_number(
+                                        line,
+                                        line_ix,
+                                        line_ix + cFieldLength,
+                                        '0',
+                                        value
+                                )
                         || value < 0 || value > 9999)
                     {
                         return false;
@@ -451,7 +465,14 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
+                    if (false
+                                == convert_string_to_number(
+                                        line,
+                                        line_ix,
+                                        line_ix + cFieldLength,
+                                        '0',
+                                        value
+                                )
                         || value < 1 || value > 12)
                     {
                         return false;
@@ -470,7 +491,14 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
+                    if (false
+                                == convert_string_to_number(
+                                        line,
+                                        line_ix,
+                                        line_ix + cFieldLength,
+                                        '0',
+                                        value
+                                )
                         || value < 1 || value > 31)
                     {
                         return false;
@@ -489,7 +517,14 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, ' ', value)
+                    if (false
+                                == convert_string_to_number(
+                                        line,
+                                        line_ix,
+                                        line_ix + cFieldLength,
+                                        ' ',
+                                        value
+                                )
                         || value < 1 || value > 31)
                     {
                         return false;
@@ -539,7 +574,14 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
+                    if (false
+                                == convert_string_to_number(
+                                        line,
+                                        line_ix,
+                                        line_ix + cFieldLength,
+                                        '0',
+                                        value
+                                )
                         || value < 0 || value > 23)
                     {
                         return false;
@@ -558,7 +600,14 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, ' ', value)
+                    if (false
+                                == convert_string_to_number(
+                                        line,
+                                        line_ix,
+                                        line_ix + cFieldLength,
+                                        ' ',
+                                        value
+                                )
                         || value < 0 || value > 23)
                     {
                         return false;
@@ -577,7 +626,14 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
+                    if (false
+                                == convert_string_to_number(
+                                        line,
+                                        line_ix,
+                                        line_ix + cFieldLength,
+                                        '0',
+                                        value
+                                )
                         || value < 1 || value > 12)
                     {
                         return false;
@@ -597,7 +653,14 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, ' ', value)
+                    if (false
+                                == convert_string_to_number(
+                                        line,
+                                        line_ix,
+                                        line_ix + cFieldLength,
+                                        ' ',
+                                        value
+                                )
                         || value < 1 || value > 12)
                     {
                         return false;
@@ -617,7 +680,14 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
+                    if (false
+                                == convert_string_to_number(
+                                        line,
+                                        line_ix,
+                                        line_ix + cFieldLength,
+                                        '0',
+                                        value
+                                )
                         || value < 0 || value > 59)
                     {
                         return false;
@@ -636,7 +706,14 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
+                    if (false
+                                == convert_string_to_number(
+                                        line,
+                                        line_ix,
+                                        line_ix + cFieldLength,
+                                        '0',
+                                        value
+                                )
                         || value < 0 || value > 60)
                     {
                         return false;
@@ -655,7 +732,14 @@ bool TimestampPattern::parse_timestamp(
                     }
 
                     int value;
-                    if (false == convert_string_to_number(line, line_ix, line_ix + cFieldLength, '0', value)
+                    if (false
+                                == convert_string_to_number(
+                                        line,
+                                        line_ix,
+                                        line_ix + cFieldLength,
+                                        '0',
+                                        value
+                                )
                         || value < 0 || value > 999)
                     {
                         return false;

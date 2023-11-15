@@ -5,7 +5,6 @@
 #include "Integral.hpp"
 #include "OrExpr.hpp"
 
-
 namespace clp_structured {
 constexpr LiteralTypeBitmask cDateTypes = cIntegralTypes | EpochDateT | FloatDateT;
 

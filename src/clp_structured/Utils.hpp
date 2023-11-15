@@ -70,7 +70,9 @@ public:
 
         for (size_t i = begin_pos; i < end_pos; ++i) {
             auto c = str[i];
-            if (false == (('a' <= c && c <= 'f') || ('A' <= c && c <= 'F') || ('0' <= c && c <= '9'))) {
+            if (false
+                == (('a' <= c && c <= 'f') || ('A' <= c && c <= 'F') || ('0' <= c && c <= '9')))
+            {
                 return false;
             }
         }

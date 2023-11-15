@@ -2,7 +2,7 @@
 cmake-*/
 *.json
 *.py
-!tools/*.json
+!tools/scripts/deps-download/*.json
 !tools/*.py
 .vscode/
 build/

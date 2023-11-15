@@ -4,7 +4,7 @@ clp-s is a tool that can compress JSON logs efficiently with search capability.
 
 ## Requirements
 
-+ We have built and tested clp-s on the OSes listed below.
++ We have built and tested clp-s on the OSes listed [below](#native-environment).
     + If you have trouble building for another OS, file an issue, and we may be able to help.
 + A compiler that can support C++17 (e.g. gcc-8)
 
@@ -41,9 +41,6 @@ A handful of packages and libraries are required to build clp-s. There are two o
 
 See the relevant README for your OS:
 
-* [CentOS 7.4](./tools/scripts/lib_install/centos7.4/README.md)
-* [macOS 12](./tools/scripts/lib_install/macos-12/README.md)
-* [Ubuntu 18.04](./tools/scripts/lib_install/ubuntu-bionic/README.md)
 * [Ubuntu 20.04 or Ubuntu 22.04](./tools/scripts/lib_install/ubuntu-focal-and-jammy/README.md)
 
 ### Build

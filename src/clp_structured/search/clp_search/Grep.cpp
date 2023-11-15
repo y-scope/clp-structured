@@ -368,7 +368,8 @@ SubQueryMatchabilityResult generate_logtypes_and_vars_for_subquery(
         } else {
             if (false == query_token.is_var()) {
                 logtype += query_token.get_value();
-            } else if (false == process_var_token(query_token, var_dict, ignore_case, sub_query, logtype)) {
+            } else if (false == process_var_token(query_token, var_dict, ignore_case, sub_query, logtype))
+            {
                 return SubQueryMatchabilityResult::WontMatch;
             }
         }
@@ -457,7 +458,9 @@ bool Grep::process_raw_query(
     // fall-back to decompression + wildcard matching for those.
     vector<QueryToken*> ambiguous_tokens;
     for (auto& query_token : query_tokens) {
-        if (false == query_token.has_greedy_wildcard_in_middle() && query_token.is_ambiguous_token()) {
+        if (false == query_token.has_greedy_wildcard_in_middle()
+            && query_token.is_ambiguous_token())
+        {
             ambiguous_tokens.push_back(&query_token);
         }
     }
