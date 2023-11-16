@@ -3,7 +3,7 @@ cmake-*/
 *.json
 *.py
 !tools/scripts/deps-download/*.json
-!tools/*.py
+!tools/scripts/deps-download/*.py
 .vscode/
 build/
 third_party/
