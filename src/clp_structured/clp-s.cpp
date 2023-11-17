@@ -12,6 +12,7 @@
 #include "search/OrOfAndForm.hpp"
 #include "search/Output.hpp"
 #include "search/SchemaMatch.hpp"
+#include "spdlog/sinks/stdout_sinks.h"
 #include "TimestampPattern.hpp"
 #include "Utils.hpp"
 
@@ -20,10 +21,19 @@ namespace po = boost::program_options;
 enum class Command : char {
     Compress = 'c',
     Extract = 'x',
-    Search = 'q'
+    Search = 's'
 };
 
 int main(int argc, char const* argv[]) {
+    try {
+        auto stderr_logger = spdlog::stderr_logger_st("stderr");
+        spdlog::set_default_logger(stderr_logger);
+        spdlog::set_pattern("%Y-%m-%dT%H:%M:%S.%e%z [%l] %v");
+    } catch (std::exception& e) {
+        // NOTE: We can't log an exception if the logger couldn't be constructed
+        return -1;
+    }
+
     po::options_description general_options("General options");
     char command_input;
     general_options.add_options()("command", po::value<char>(&command_input))(
