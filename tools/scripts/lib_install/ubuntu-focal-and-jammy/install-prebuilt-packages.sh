@@ -15,6 +15,4 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
   openjdk-11-jdk \
   pkg-config \
   python3 \
-  python3-pip \
-  rsync \
   zlib1g-dev

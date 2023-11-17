@@ -1,4 +1,4 @@
-To install the dependencies required to build muslope, follow the steps below.
+To install the dependencies required to build clp-s, follow the steps below.
 These same steps are used by our Docker containers.
 
 # Installing dependencies
@@ -12,6 +12,6 @@ will not install any dependencies you don't expect.
   ./install-all.sh
   ```
 
-# Building muslope
+# Building clp-s
 
 * See the instructions in the [main README](../../../../README.md#build)

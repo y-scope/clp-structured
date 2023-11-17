@@ -1,6 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Stop on error
+# Treat undefined variables as errors
+set -u
+# Exit on error
 set -e
 
 script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"

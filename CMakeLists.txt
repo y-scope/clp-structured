@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.19)
-project(clp-s)
+cmake_minimum_required(VERSION 3.16...3.19)
+project(clp-structured)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -14,11 +14,13 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 # faster json parsing
 add_definitions(-DNDEBUG)
 
+include(cmake/Modules/FindLibraryDependencies.cmake)
+
 find_package(Boost REQUIRED serialization program_options iostreams filesystem)
 if (Boost_FOUND)
     message(STATUS "Found Boost ${Boost_VERSION}")
 else ()
-    message(FATAL_ERROR "Could not find ${CLP_LIBS_STRING} libraries for Boost")
+    message(FATAL_ERROR "Could not find libraries for Boost")
 endif ()
 
 
@@ -26,10 +28,8 @@ find_package(ZStd REQUIRED)
 if (ZStd_FOUND)
     message(STATUS "Found ZStd ${ZStd_VERSION}")
 else ()
-    message(FATAL_ERROR "Could not find ${CLP_LIBS_STRING} libraries for ZStd")
+    message(FATAL_ERROR "Could not find libraries for ZStd")
 endif ()
-
-include(cmake/Modules/FindLibraryDependencies.cmake)
 
 # SIMDJSON builds a binary for several architectures by default. This can be a problem
 # if the assembler doesn't support one of these ISAs. The following should be set on
@@ -86,7 +86,6 @@ add_library(clp-s-archive
         src/clp_structured/SchemaReader.hpp
         src/clp_structured/SchemaWriter.cpp
         src/clp_structured/SchemaWriter.hpp
-        submodules/date/include/date/date.h
         src/clp_structured/TimestampDictionaryReader.cpp
         src/clp_structured/TimestampDictionaryReader.hpp
         src/clp_structured/TimestampDictionaryWriter.cpp
@@ -107,9 +106,11 @@ add_library(clp-s-archive
         src/clp_structured/ZstdCompressor.hpp
         src/clp_structured/ZstdDecompressor.cpp
         src/clp_structured/ZstdDecompressor.hpp
+        submodules/date/include/date/date.h
 )
 
-target_link_libraries(clp-s-archive PUBLIC simdjson spdlog nlohmann_json ZStd::ZStd Boost::serialization Boost::filesystem Boost::iostreams absl::flat_hash_map)
+target_link_libraries(clp-s-archive PUBLIC simdjson spdlog nlohmann_json ZStd::ZStd
+        Boost::serialization Boost::filesystem Boost::iostreams absl::flat_hash_map)
 
 add_executable(clp-s src/clp_structured/clp-s.cpp)
 target_link_libraries(clp-s PRIVATE clp-s-archive Boost::program_options Kibana)

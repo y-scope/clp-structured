@@ -10,11 +10,13 @@ clp-s is a tool that can compress JSON logs efficiently with search capability.
 
 ## Building
 
-* To build, we require some source dependencies, packages from package managers, and libraries built from source.
+* To build, we require some source dependencies, packages from package managers, 
+  and libraries built from source.
 
 ### Source Dependencies
 
-We use both git submodules and third-party source packages. To download all, you can run this script:
+We use both git submodules and third-party source packages. 
+To download all, you can run this script:
 
 ```shell
 tools/scripts/deps-download/download-all.sh
@@ -25,7 +27,7 @@ This will download:
 * [ANTLR v4](https://www.antlr.org/download.html) (v4.11.1)
 * [abseil-cpp](https://github.com/abseil/abseil-cpp.git) (20230802.1)
 * [date](https://github.com/HowardHinnant/date.git) (v3.0.1)
-* [json](https://github.com/nlohmann/json.git) (v3.10.4)
+* [nlohmann_json](https://github.com/nlohmann/json.git) (v3.10.4)
 * [simdjson](https://github.com/simdjson/simdjson.git) (v3.1.7)
 * [spdlog](https://github.com/gabime/spdlog.git) (v1.10.0)
 
@@ -47,42 +49,41 @@ See the relevant README for your OS:
 
 * Configure the cmake project:
   ```shell
-  mkdir build
-  cd build
-  cmake ../
+  cmake -S . -B build
   ```
 
 * Build:
   ```shell
-  make -j
+  cmake --build build -j
   ```
 
-On some machines certain compiler flags need to be set for the simdjson property to prevent it from
-creating binaries for ISAs that the assembler does not support. One example for disabling icelake binaries supporting
-avx512 can be found commented out in the CMakeLists.txt file.
+On some machines certain, compiler flags need to be set for the `simdjson` property to prevent it 
+from creating binaries for ISAs that the assembler doesn't support. An example disabling Ice Lake 
+binaries supporting avx512 can be found commented out in [CMakeLists.txt](CMakeLists.txt).
 
 ## Running
 
 ### Compression
 
 ```bash
-./clp-s c output_dir /home/my/log
+./clp-s c archive_dir /home/my/log
 ```
 
-+ `output_dir` specifies the output directory of the compressed logs.
-+ `/home/my/log` specifies the path of the log file (multiple files are supported but directories are not).
++ `archive_dir` specifies the output directory of the compressed logs.
++ `/home/my/log` specifies the path of the log file.
 
-You can also specify zstd compression level and the maximum encoding size of an archive. e.g.
+You can also specify zstd compression level and the maximum encoding size of an archive. 
+The encoding size is the in-memory size of dictionaries plus encoded tables. e.g.
 
 ```bash
-./clp-s c --max-encoding-size 65536 --compression-level 3 output_dir /home/my/log
+./clp-s c --max-encoding-size 65536 --compression-level 3 archive_dir /home/my/log
 ```
 
-You can also specify one column that should be treated as a timestamp. This will affect encoding for string timestamps,
-and will provide a timestamp-range index on that column.
+You can also specify one column that should be treated as a timestamp. This will affect 
+encoding for string timestamps, and will provide a timestamp-range index on that column.
 
 ```bash
-./clp-s c output_dir /home/my/log --timestamp-key @timestamp
+./clp-s c archive_dir /home/my/log --timestamp-key '@timestamp'
 ```
 
 ### Decompression
@@ -91,8 +92,8 @@ and will provide a timestamp-range index on that column.
 ./clp-s x input_dir output_dir
 ```
 
-+ `input_dir` specifies the directory of the compressed logs.
-+ `/home/my/log` specifies the output directory of the uncompressed logs.
++ `archive_dir` specifies the directory of the compressed logs.
++ `output_dir` specifies the output directory for the decompressed logs.
 
 ### Search
 
@@ -101,4 +102,12 @@ and will provide a timestamp-range index on that column.
 ```
 
 + `archive_dir` specifies the directory containing the clp-s archive.
-+ `query` specifies the query to run.
++ `query` specifies a KQL query to run.
+
+Here are some examples of KQL queries. They support field search and wildcard search.
+```
+ts > 1649923037 AND ts <= 1649923038
+id: 22149
+message: error* AND level: ERROR
+NOT level: INFO OR message: "unsuccessful operation*"
+```
