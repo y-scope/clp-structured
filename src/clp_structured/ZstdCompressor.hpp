@@ -75,7 +75,6 @@ public:
      */
     void close() override;
 
-    // Methods
     /**
      * Initialize streaming compressor
      * @param file_writer

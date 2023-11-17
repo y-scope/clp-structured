@@ -246,6 +246,10 @@ inline T2 bit_cast(T1 t1) {
     return t2;
 }
 
+/**
+ * A span of memory
+ * @tparam T
+ */
 template <typename T>
 class Span {
 public:

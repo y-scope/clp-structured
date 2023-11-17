@@ -32,14 +32,13 @@ public:
             = 0;
 
     /**
-     * Stores the column to the file
+     * Stores the column to a compressed file
      * @param compressor
      */
     virtual void store(ZstdCompressor& compressor) = 0;
 
     /**
-     * Gets the name of the column
-     * @return name of the column
+     * @return Name of the column
      */
     std::string get_name() { return m_name; }
 
@@ -119,7 +118,6 @@ public:
     void store(ZstdCompressor& compressor) override;
 
     /**
-     * Gets the encoded log dict id
      * @param encoded_id
      * @return the encoded log dict id
      */
@@ -128,9 +126,8 @@ public:
     }
 
     /**
-     * Gets the encoded offset
      * @param encoded_id
-     * @return the encoded offset
+     * @return The encoded offset
      */
     static int64_t get_encoded_offset(uint64_t encoded_id) {
         return ((int64_t)encoded_id & cOffsetMask) >> cOffsetBitPosition;
@@ -141,7 +138,7 @@ private:
      * Encodes a log dict id
      * @param id
      * @param offset
-     * @return the encoded log dict id
+     * @return The encoded log dict id
      */
     static int64_t encode_log_dict_id(uint64_t id, uint64_t offset) {
         return ((int64_t)id) | ((int64_t)offset) << cOffsetBitPosition;

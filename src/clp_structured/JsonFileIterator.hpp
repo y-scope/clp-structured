@@ -35,12 +35,11 @@ public:
 
     /**
      * Checks if the file is open
-     * @return true if the file opened succesfully
+     * @return true if the file opened successfully
      */
     bool is_open() { return m_reader.is_open(); }
 
     /**
-     * Get the number of truncated bytes after json documents
      * @return number of truncated bytes after json documents
      */
     size_t truncated_bytes() {

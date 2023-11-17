@@ -78,6 +78,9 @@ public:
      */
     static void add_double_var(std::string& logtype) { logtype += (char)VarDelim::Double; }
 
+    /**
+     * @return The number of variables in the logtype
+     */
     size_t get_num_vars() const { return m_var_positions.size(); }
 
     /**
@@ -160,7 +163,7 @@ public:
     void clear();
 
     /**
-     * Writes an entry to file
+     * Writes an entry to a compressed file
      * @param compressor
      */
     void write_to_file(ZstdCompressor& compressor) const;
@@ -185,6 +188,10 @@ public:
      * @param escaped_value
      */
     void decode_log_type(std::string& escaped_value);
+
+    /**
+     * Decodes the log type
+     */
     void decode_log_type();
 
     /**
@@ -257,7 +264,7 @@ public:
     void clear() { m_value.clear(); }
 
     /**
-     * Writes an entry to file
+     * Writes an entry to a compressed file
      * @param compressor
      */
     void write_to_file(ZstdCompressor& compressor) const;

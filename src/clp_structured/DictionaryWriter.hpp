@@ -24,7 +24,8 @@ public:
     /**
      * Opens dictionary for writing
      * @param dictionary_path
-     * @param segment_index_path
+     * @param compression_level
+     * @param max_id
      */
     void open(std::string const& dictionary_path, int compression_level, DictionaryIdType max_id);
 
@@ -40,8 +41,7 @@ public:
     void write_header_and_flush_to_disk();
 
     /**
-     * Gets the size (in-memory) of the data contained in the dictionary
-     * @return
+     * @return The size (in-memory) of the data contained in the dictionary
      */
     size_t get_data_size() const { return m_data_size; }
 

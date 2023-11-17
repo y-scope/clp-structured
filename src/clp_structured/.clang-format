@@ -70,20 +70,12 @@ IncludeCategories:
   # Project headers
   - Regex: '^".*.hpp"$'
     Priority: 4
+  - Regex: '^".*.h"$'
+    Priority: 4
   # Third-party headers. Update when adding new third-party library
-  - Regex: '^<nlohmann/json.hpp>'
-    Priority: 3
-  - Regex: '<simdjson.h>'
-    Priority: 3
   - Regex: '<zstd*.h>'
     Priority: 3
   - Regex: '<(boost)'
-    Priority: 3
-  - Regex: '<(spdlog)'
-    Priority: 3
-  - Regex: '<(absl)'
-    Priority: 3
-  - Regex: '<(antlr4)'
     Priority: 3
   # C headers
   - Regex: '^<.*.h>$'

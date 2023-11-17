@@ -39,8 +39,7 @@ public:
     }
 
     /**
-     * Gets the content of the message
-     * @return the content
+     * @return The content of the message
      */
     std::map<int32_t, std::variant<int64_t, double, std::string, bool>>& get_content() {
         return m_message;

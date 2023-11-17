@@ -41,20 +41,17 @@ public:
     void read_new_entries(bool lazy = false);
 
     /**
-     * Gets the dictionary's entries
      * @return All dictionary entries
      */
     std::vector<EntryType> const& get_entries() const { return m_entries; }
 
     /**
-     * Gets the entry with the given ID
      * @param id
      * @return The entry with the given ID
      */
     EntryType const& get_entry(DictionaryIdType id) const;
 
     /**
-     * Gets the value of the entry with the specified ID
      * @param id
      * @return Value of the entry with the specified ID
      */

@@ -32,28 +32,16 @@ public:
      */
     virtual void load(ZstdDecompressor& decompressor, uint64_t num_messages) = 0;
 
-    /**
-     * Gets the name of the column
-     * @return name
-     */
     std::string get_name() const { return m_name; }
 
-    /**
-     * Gets the id of the column
-     * @return id
-     */
     int32_t get_id() const { return m_id; }
 
-    /**
-     * Gets the type of the column
-     * @return type
-     */
     virtual std::string get_type() { return "base"; }
 
     /**
      * Extracts a value of the column
      * @param cur_message
-     * @return value
+     * @return Value
      */
     virtual std::variant<int64_t, double, std::string, uint8_t> extract_value(uint64_t cur_message)
             = 0;
@@ -155,14 +143,14 @@ public:
     /**
      * Gets the encoded id of the variable
      * @param cur_message
-     * @return the encoded logtype id
+     * @return The encoded logtype id
      */
     int64_t get_encoded_id(uint64_t cur_message);
 
     /**
      * Gets the encoded variables
      * @param cur_message
-     * @return encoded variables
+     * @return Encoded variables in a span
      */
     Span<int64_t> get_encoded_vars(uint64_t cur_message);
 
@@ -202,7 +190,7 @@ public:
     /**
      * Gets the encoded id of the variable
      * @param cur_message
-     * @return the encoded logtype id
+     * @return The encoded logtype id
      */
     int64_t get_variable_id(uint64_t cur_message);
 
@@ -235,7 +223,8 @@ public:
     ) override;
 
     /**
-     * Gets the encoded time in epoch time
+     * @param cur_message
+     * @return The encoded time in epoch time
      */
     epochtime_t get_encoded_time(uint64_t cur_message);
 
@@ -263,7 +252,8 @@ public:
     ) override;
 
     /**
-     * Gets the encoded time in float epoch time
+     * @param cur_message
+     * @return The encoded time in float epoch time
      */
     double get_encoded_time(uint64_t cur_message);
 

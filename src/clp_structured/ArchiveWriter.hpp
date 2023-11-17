@@ -61,8 +61,7 @@ public:
     void append_message(int32_t schema_id, std::set<int32_t>& schema, ParsedMessage& message);
 
     /**
-     * Gets the size of the uncompressed data written to the archive
-     * @return size of the uncompressed data written to the archive
+     * @return Size of the uncompressed data written to the archive
      */
     size_t get_data_size();
 
@@ -71,7 +70,6 @@ private:
      * Initializes the schema writer
      * @param writer
      * @param schema
-     * @return
      */
     void initialize_schema_writer(SchemaWriter* writer, std::set<int32_t>& schema);
 
