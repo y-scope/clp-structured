@@ -43,15 +43,12 @@ add_library(clp-s-search
         StringLiteral.hpp
         Transformation.hpp
         Value.hpp
-        clp_search/Defs.hpp
         clp_search/EncodedVariableInterpreter.cpp
         clp_search/EncodedVariableInterpreter.hpp
         clp_search/Grep.cpp
         clp_search/Grep.hpp
         clp_search/Query.cpp
         clp_search/Query.hpp
-        clp_search/TmpUtils.hpp
-        clp_search/type_utils.hpp
 )
 
 target_include_directories(clp-s-search PUBLIC "${PROJECT_SOURCE_DIR}")

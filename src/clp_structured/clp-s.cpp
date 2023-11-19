@@ -18,6 +18,8 @@
 
 namespace po = boost::program_options;
 
+using namespace clp_structured::search;
+
 enum class Command : char {
     Compress = 'c',
     Extract = 'x',
@@ -176,37 +178,37 @@ int main(int argc, char const* argv[]) {
         clp_structured::TimestampPattern::init();
 
         auto query_stream = std::istringstream(query);
-        auto expr = clp_structured::parse_kibana_expression(query_stream);
+        auto expr = Kibana::parse_kibana_expression(query_stream);
 
-        if (std::dynamic_pointer_cast<clp_structured::EmptyExpr>(expr)) {
+        if (std::dynamic_pointer_cast<EmptyExpr>(expr)) {
             return 1;
         }
 
-        clp_structured::OrOfAndForm standardize_pass;
+        OrOfAndForm standardize_pass;
         expr = standardize_pass.run(expr);
 
-        if (std::dynamic_pointer_cast<clp_structured::EmptyExpr>(expr)) {
+        if (std::dynamic_pointer_cast<EmptyExpr>(expr)) {
             return 1;
         }
 
-        clp_structured::NarrowTypes narrow_pass;
+        NarrowTypes narrow_pass;
         expr = narrow_pass.run(expr);
 
-        if (std::dynamic_pointer_cast<clp_structured::EmptyExpr>(expr)) {
+        if (std::dynamic_pointer_cast<EmptyExpr>(expr)) {
             return 1;
         }
 
-        clp_structured::ConvertToExists convert_pass;
+        ConvertToExists convert_pass;
         expr = convert_pass.run(expr);
 
-        if (std::dynamic_pointer_cast<clp_structured::EmptyExpr>(expr)) {
+        if (std::dynamic_pointer_cast<EmptyExpr>(expr)) {
             return 1;
         }
 
         // skip decompressing the archive if we won't match based on
         // the timestamp index
         auto timestamp_dict = clp_structured::ReaderUtils::read_timestamp_dictionary(archive_dir);
-        clp_structured::EvaluateTimestampIndex timestamp_index(timestamp_dict);
+        EvaluateTimestampIndex timestamp_index(timestamp_dict);
         if (clp_structured::EvaluatedValue::False == timestamp_index.run(expr)) {
             return 1;
         }
@@ -215,16 +217,15 @@ int main(int argc, char const* argv[]) {
         auto schemas = clp_structured::ReaderUtils::read_schemas(archive_dir);
 
         // Narrow against schemas
-        clp_structured::SchemaMatch match_pass(schema_tree, schemas);
+        SchemaMatch match_pass(schema_tree, schemas);
         expr = match_pass.run(expr);
 
-        if (std::dynamic_pointer_cast<clp_structured::EmptyExpr>(expr)) {
+        if (std::dynamic_pointer_cast<EmptyExpr>(expr)) {
             return 1;
         }
 
         // output result
-        clp_structured::Output
-                output(schema_tree, schemas, match_pass, expr, archive_dir, timestamp_dict);
+        Output output(schema_tree, schemas, match_pass, expr, archive_dir, timestamp_dict);
         output.filter();
 
         return 0;

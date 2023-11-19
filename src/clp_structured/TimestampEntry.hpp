@@ -4,12 +4,14 @@
 #include <string>
 #include <variant>
 
+#include "Defs.hpp"
 #include "ErrorCode.hpp"
-#include "search/clp_search/Defs.hpp"
 #include "search/FilterOperation.hpp"
 #include "Utils.hpp"
 #include "ZstdCompressor.hpp"
 #include "ZstdDecompressor.hpp"
+
+using clp_structured::search::FilterOperation;
 
 namespace clp_structured {
 class TimestampEntry {

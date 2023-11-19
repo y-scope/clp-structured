@@ -7,57 +7,54 @@
 
 #include "Literal.hpp"
 
-namespace clp_structured {
-/**
- * Class representing a Boolean literal in the search AST
- */
-class BooleanLiteral : public Literal {
-public:
-    // Deleted copy
-    BooleanLiteral(BooleanLiteral const&) = delete;
-    BooleanLiteral& operator=(BooleanLiteral const&) = delete;
-
+namespace clp_structured { namespace search {
     /**
-     * Create a bool literal
-     * @param v the value of the boolean
-     * @return a Boolean literal
+     * Class representing a Boolean literal in the search AST
      */
-    static std::shared_ptr<Literal> create_from_bool(bool v);
+    class BooleanLiteral : public Literal {
+    public:
+        // Deleted copy
+        BooleanLiteral(BooleanLiteral const&) = delete;
+        BooleanLiteral& operator=(BooleanLiteral const&) = delete;
 
-    /**
-     * Attempt to create a bool literal from a string
-     * @param v the string we are attempting to convert to bool
-     * @return a Boolean literal, or nullptr if the string does not represent a bool
-     */
-    static std::shared_ptr<Literal> create_from_string(std::string const& v);
+        /**
+         * Create a bool literal
+         * @param v the value of the boolean
+         * @return A Boolean literal
+         */
+        static std::shared_ptr<Literal> create_from_bool(bool v);
 
-    /**
-     * Strict checks for type matching against a given literal type.
-     * @return true if the check succeeds
-     */
-    bool matches_type(LiteralType type) override { return type & LiteralType::BooleanT; }
+        /**
+         * Attempt to create a bool literal from a string
+         * @param v the string we are attempting to convert to bool
+         * @return A Boolean literal, or nullptr if the string does not represent a bool
+         */
+        static std::shared_ptr<Literal> create_from_string(std::string const& v);
 
-    bool matches_any(LiteralTypeBitmask mask) override { return mask & LiteralType::BooleanT; }
+        // Methods inherited from Value
+        void print() override;
 
-    bool matches_exactly(LiteralTypeBitmask mask) override { return mask == LiteralType::BooleanT; }
+        // Methods inherited from Literal
+        bool matches_type(LiteralType type) override { return type & LiteralType::BooleanT; }
 
-    void print() override;
+        bool matches_any(LiteralTypeBitmask mask) override { return mask & LiteralType::BooleanT; }
 
-    /**
-     * Functions to check type conversion and cast when possible under a given filter operation
-     * @param ret the casted value
-     * @param op the FilterOperation operating on the Literal
-     * @return true if cast is successful
-     */
-    bool as_var_string(std::string& ret, FilterOperation op) override;
-    bool as_bool(bool& ret, FilterOperation op) override;
+        bool matches_exactly(LiteralTypeBitmask mask) override {
+            return mask == LiteralType::BooleanT;
+        }
 
-private:
-    bool m_v;
+        bool as_var_string(std::string& ret, FilterOperation op) override;
 
-    BooleanLiteral() = default;
-    explicit BooleanLiteral(bool v) : m_v(v){};
-};
-}  // namespace clp_structured
+        bool as_bool(bool& ret, FilterOperation op) override;
+
+    private:
+        bool m_v;
+
+        // Constructors
+        BooleanLiteral() = default;
+
+        explicit BooleanLiteral(bool v) : m_v(v){};
+    };
+}}  // namespace clp_structured::search
 
 #endif  // CLP_STRUCTURED_SEARCH_BOOLEAN_H

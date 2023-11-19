@@ -7,53 +7,50 @@
 
 #include "Literal.hpp"
 
-namespace clp_structured {
-/**
- * Class for Null literals in the search AST
- */
-class NullLiteral : public Literal {
-public:
-    // Deleted copy
-    NullLiteral(NullLiteral const&) = delete;
-    NullLiteral& operator=(NullLiteral const&) = delete;
-
+namespace clp_structured { namespace search {
     /**
-     * Explicit create
-     * @return a newly created null literal
+     * Class for Null literals in the search AST
      */
-    static std::shared_ptr<Literal> create();
+    class NullLiteral : public Literal {
+    public:
+        // Deleted copy
+        NullLiteral(NullLiteral const&) = delete;
 
-    /**
-     * Try to create a null literal from a string
-     * @param v the string we are attempting to convert to Null
-     * @return a null literal, or nullptr if the string does not represent "null"
-     */
-    static std::shared_ptr<Literal> create_from_string(std::string const& v);
+        NullLiteral& operator=(NullLiteral const&) = delete;
 
-    /**
-     * Strict checks for type matching against a given literal type.
-     * @return true if the check succeeds
-     */
-    bool matches_type(LiteralType type) override { return type & LiteralType::NullT; }
+        /**
+         * Explicit create a null literal
+         * @return A newly created null literal
+         */
+        static std::shared_ptr<Literal> create();
 
-    bool matches_any(LiteralTypeBitmask mask) override { return mask & LiteralType::NullT; }
+        /**
+         * Try to create a null literal from a string
+         * @param v the string we are attempting to convert to Null
+         * @return A null literal, or nullptr if the string does not represent "null"
+         */
+        static std::shared_ptr<Literal> create_from_string(std::string const& v);
 
-    bool matches_exactly(LiteralTypeBitmask mask) override { return mask == LiteralType::NullT; }
+        // Methods inherited from Value
+        void print() override;
 
-    void print() override;
+        // Methods inherited from Literal
+        bool matches_type(LiteralType type) override { return type & LiteralType::NullT; }
 
-    /**
-     * Functions to check type conversion and cast when possible under a given filter operation
-     * @param ret the casted value
-     * @param op the FilterOperation operating on the Literal
-     * @return true if cast is successful
-     */
-    bool as_var_string(std::string& ret, FilterOperation op) override;
-    bool as_null(FilterOperation op) override;
+        bool matches_any(LiteralTypeBitmask mask) override { return mask & LiteralType::NullT; }
 
-private:
-    NullLiteral() = default;
-};
-}  // namespace clp_structured
+        bool matches_exactly(LiteralTypeBitmask mask) override {
+            return mask == LiteralType::NullT;
+        }
+
+        bool as_var_string(std::string& ret, FilterOperation op) override;
+
+        bool as_null(FilterOperation op) override;
+
+    private:
+        // Constructor
+        NullLiteral() = default;
+    };
+}}  // namespace clp_structured::search
 
 #endif  // CLP_STRUCTURED_SEARCH_NULL_H

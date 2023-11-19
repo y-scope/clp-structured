@@ -59,6 +59,7 @@ add_library(clp-s-archive
         src/clp_structured/Compressor.hpp
         src/clp_structured/Decompressor.cpp
         src/clp_structured/Decompressor.hpp
+        src/clp_structured/Defs.hpp
         src/clp_structured/DictionaryEntry.cpp
         src/clp_structured/DictionaryEntry.hpp
         src/clp_structured/DictionaryReader.cpp

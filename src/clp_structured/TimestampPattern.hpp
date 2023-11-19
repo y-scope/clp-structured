@@ -8,8 +8,8 @@
 #include <utility>
 
 // Project headers
+#include "Defs.hpp"
 #include "FileWriter.hpp"
-#include "search/clp_search/Defs.hpp"
 #include "TraceableException.hpp"
 
 namespace clp_structured {

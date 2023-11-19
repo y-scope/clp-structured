@@ -3,19 +3,19 @@
 
 #include "Expression.hpp"
 
-namespace clp_structured {
-/**
- * Generic class representing a transformation on some expression.
- */
-class Transformation {
-public:
+namespace clp_structured { namespace search {
     /**
-     * Run the pass. The expression passed as input may be mutated by the pass.
-     * @param expr the expression that the pass will run on
-     * @return a new expression; may be the same as the input expression or different
+     * Generic class representing a transformation on some expression.
      */
-    virtual std::shared_ptr<Expression> run(std::shared_ptr<Expression>& expr) = 0;
-};
-}  // namespace clp_structured
+    class Transformation {
+    public:
+        /**
+         * Runs the pass. The expression passed as input may be mutated by the pass.
+         * @param expr the expression that the pass will run on
+         * @return a new expression; may be the same as the input expression or different
+         */
+        virtual std::shared_ptr<Expression> run(std::shared_ptr<Expression>& expr) = 0;
+    };
+}}  // namespace clp_structured::search
 
 #endif

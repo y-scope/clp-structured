@@ -8,203 +8,208 @@
 
 #include "Literal.hpp"
 
-namespace clp_structured {
-/**
- * Class representing a token used to describe one level of hierarchy in a column.
- */
-class DescriptorToken {
-public:
-    DescriptorToken() = default;
-
+namespace clp_structured { namespace search {
     /**
-     * Initialize the token from a string and set flags
-     * based on whether the token contains wildcards
+     * Class representing a token used to describe one level of hierarchy in a column.
      */
-    explicit DescriptorToken(std::string const& token)
-            : m_token(token),
-              m_wildcard(false),
-              m_regex(false) {
-        if (token == "*") {
-            m_wildcard = true;
-        }
+    class DescriptorToken {
+    public:
+        // Constructors
+        DescriptorToken() = default;
 
-        for (char c : token) {
-            if (c == '*') {
-                m_regex = true;
+        /**
+         * Initialize the token from a string and set flags based on whether the token contains
+         * wildcards
+         * @param token the string to initialize the token from
+         */
+        explicit DescriptorToken(std::string const& token)
+                : m_token(token),
+                  m_wildcard(false),
+                  m_regex(false) {
+            if (token == "*") {
+                m_wildcard = true;
+            }
+
+            for (char c : token) {
+                if (c == '*') {
+                    m_regex = true;
+                }
             }
         }
-    }
+
+        /**
+         * Whether the descriptor is a wildcard
+         * @return true if the descriptor is a single wildcard
+         */
+        bool wildcard() const { return m_wildcard; }
+
+        /**
+         * Whether the descriptor contains a wildcard somewhere
+         * TODO: Not currently used, and regex isn't currently supported
+         * @return true if the descriptor contains a wildcard
+         */
+        bool regex() const { return m_regex; }
+
+        /**
+         * Get a reference to the underlying token string
+         * @return a reference to the underlying string
+         */
+        std::string const& get_token() const { return m_token; }
+
+    private:
+        bool m_wildcard{};
+        bool m_regex{};
+        std::string m_token;
+    };
+
+    typedef std::vector<DescriptorToken> DescriptorList;
+
+    DescriptorList tokenize_descriptor(std::vector<std::string> const& descriptors);
 
     /**
-     * Whether the descriptor is a wildcard
-     * @return true if the descriptor is a single wildcard
-     */
-    bool wildcard() const { return m_wildcard; }
-
-    /**
-     * Whether the descriptor contains a wildcard somewhere
+     * Class representing a Column in the Search AST. The Column is specified
+     * by a list of DescriptorTokens which may be wildcards.
      *
-     * TODO: Not currently used, and regex isn't currently supported
-     * @return true if the descriptor contains a wildcard
+     * Currently only pure wildcard DescriptorTokens are supported -- some descriptor
+     * in the list of descriptors can be a wildcard, but individual descriptors can not mix
+     * wildcards with other characters.
      */
-    bool regex() const { return m_regex; }
+    class ColumnDescriptor : public Literal {
+    public:
+        /**
+         * Create a ColumnDescriptor literal from an integral value
+         * @param descriptor(s) the token or list of tokens making up the descriptor
+         * @return A ColumnDescriptor
+         */
+        static std::shared_ptr<ColumnDescriptor> create(std::string const& descriptor);
+        static std::shared_ptr<ColumnDescriptor> create(std::vector<std::string> const& descriptors
+        );
+        static std::shared_ptr<ColumnDescriptor> create(DescriptorList const& descriptors);
 
-    /**
-     * Get a reference to the underlying token string
-     * @return a reference to the underlying string
-     */
-    std::string const& get_token() const { return m_token; }
+        /**
+         * Deep copy of this ColumnDescriptor
+         * @return A deep copy of this Column descriptor
+         */
+        std::shared_ptr<ColumnDescriptor> copy();
 
-private:
-    bool m_wildcard{};
-    bool m_regex{};
-    std::string m_token;
-};
+        /**
+         * Get iterators to this Column's list of descriptors
+         * @return Iterators to the beginning and end of the list of descriptors
+         */
+        DescriptorList::iterator descriptor_begin() { return m_descriptors.begin(); }
 
-typedef std::vector<DescriptorToken> DescriptorList;
+        DescriptorList::iterator descriptor_end() { return m_descriptors.end(); }
 
-DescriptorList tokenize_descriptor(std::vector<std::string> const& descriptors);
+        /**
+         * @return A reference to the underlying list of descriptors.
+         * Useful when the descriptors need to be mutated e.g. when being resolved.
+         */
+        DescriptorList& get_descriptor_list() { return m_descriptors; }
 
-/**
- * Class representing a Column in the Search AST. The Column is specified
- * by a list of DescriptorTokens which may be wildcards.
- *
- * Currently only pure wildcard DescriptorTokens are supported -- some descriptor
- * in the list of descriptors can be a wildcard, but individual descriptors can not mix
- * wildcards with other characters.
- */
-class ColumnDescriptor : public Literal {
-public:
-    /**
-     * Create a ColumnDescriptor literal from an integral value
-     * @param descriptor(s) the token or list of tokens making up the descriptor
-     * @return a ColumnDescriptor
-     */
-    static std::shared_ptr<ColumnDescriptor> create(std::string const& descriptor);
-    static std::shared_ptr<ColumnDescriptor> create(std::vector<std::string> const& descriptors);
-    static std::shared_ptr<ColumnDescriptor> create(DescriptorList const& descriptors);
+        /**
+         * Set the unresolved tokens for this column descriptor to a suffix of the descriptor list.
+         * Used for array searches.
+         * FIXME: this is incredibly confusing to use
+         * @param it the iterator to start from when setting unresolved tokens to the suffix
+         */
+        void add_unresolved_tokens(DescriptorList::iterator it);
 
-    /**
-     * Deep copy
-     * @return a deep copy of this Column descriptor
-     */
-    std::shared_ptr<ColumnDescriptor> copy();
+        /**
+         * Set types this column can match
+         * @param flags that can be matched by this column
+         */
+        void set_matching_types(LiteralTypeBitmask flags) { m_flags = flags; }
 
-    /**
-     * Get iterators to this Column's list of descriptors
-     * @return iterators to the beginning and end of the list of descriptors
-     */
-    DescriptorList::iterator descriptor_begin() { return m_descriptors.begin(); }
+        /**
+         * Set type this column can match
+         * @param type that can be matched by this column
+         */
+        void set_matching_type(LiteralType type) { m_flags = type; }
 
-    DescriptorList::iterator descriptor_end() { return m_descriptors.end(); }
+        /**
+         * Remove types from set of types this column can match
+         * @param flags to be removed
+         */
+        void remove_matching_types(LiteralTypeBitmask flags) { m_flags &= ~flags; }
 
-    /**
-     * Return a reference to the underlying list of descriptors.
-     * Useful when the descriptors need to be mutated e.g. when being resolved.
-     */
-    DescriptorList& get_descriptor_list() { return m_descriptors; }
+        /**
+         * Remove type from set of types this column can match
+         * @param type to be removed
+         */
+        void remove_matching_type(LiteralType type) { m_flags &= ~type; }
 
-    /**
-     * Set the unresolved tokens for this column descriptor to a suffix of the descriptor list.
-     * Used for array searches.
-     *
-     * FIXME: this is incredibly confusing to use
-     * @param it the iterator to start from when setting unresolved tokens to the suffix
-     */
-    void add_unresolved_tokens(DescriptorList::iterator it);
+        /**
+         * @return the CLJ column Id this Column represents. Garbage value if it was never set.
+         */
+        int32_t get_column_id() const { return m_id; }
 
-    void print() override;
+        /**
+         * Set the CLJ column Id this column represents
+         * @param id the CLJ column Id to set this column to
+         */
+        void set_column_id(int32_t id) { m_id = id; }
 
-    /**
-     * Checks for type matching against a given literal type.
-     * ColumnDescriptor can implicitly match several different types at the same time.
-     * matches_exactly is a strict check trying to match against all of a set of types.
-     * @return true if the check succeeds
-     */
-    bool matches_type(LiteralType type) override { return m_flags & type; }
+        /**
+         * Get the list of unresolved tokens used for array search
+         * @return the list of unresolved tokens
+         * FIXME: should be reference?
+         */
+        DescriptorList get_unresolved_tokens() const { return m_unresolved_tokens; }
 
-    bool matches_any(LiteralTypeBitmask mask) override { return m_flags & mask; }
+        /**
+         * Whether the Column has any unresolved tokens for array search
+         * @return true if there are unresolved tokens for array search
+         */
+        bool has_unresolved_tokens() const { return !m_unresolved_tokens.empty(); }
 
-    bool matches_exactly(LiteralTypeBitmask mask) override { return m_flags == mask; }
+        // Safe only if this column has been explicitly set to
+        // only have a single type
+        LiteralType get_literal_type() const { return static_cast<LiteralType>(m_flags); }
 
-    /**
-     * Set types this column can match
-     * @param type(s) type that can be matched by this column
-     */
-    void set_matching_types(LiteralTypeBitmask flags) { m_flags = flags; }
+        /**
+         * Whether the list of Descriptor's contains any wildcards
+         * @return true if the descriptor contains any wildcards that need to be resolved
+         */
+        bool is_unresolved_descriptor() const { return m_unresolved_descriptors; }
 
-    void set_matching_type(LiteralType type) { m_flags = type; }
+        /**
+         * Whether this Column is a single wildcard
+         * @return true if this descriptor is just a single wildcard
+         */
+        bool is_pure_wildcard() const { return m_pure_wildcard; }
 
-    /**
-     * Remove type(s) from set of types this column can match
-     * @param type(s) the types to be removed
-     */
-    void remove_matching_type(LiteralType type) { m_flags &= ~type; }
+        // Methods inherited from Value
+        void print() override;
 
-    void remove_matching_types(LiteralTypeBitmask flags) { m_flags &= ~flags; }
+        // Methods inherited from Literal
+        // ColumnDescriptor can implicitly match several different types at the same time.
+        bool matches_type(LiteralType type) override { return m_flags & type; }
 
-    /**
-     * Get the CLJ column Id this Column represents. Garbage value if it was never set.
-     *
-     * @return the CLJ column Id
-     */
-    int32_t get_column_id() const { return m_id; }
+        bool matches_any(LiteralTypeBitmask mask) override { return m_flags & mask; }
 
-    /**
-     * Set the CLJ column Id this column represents
-     * @param id the CLJ column Id to set this column to
-     */
-    void set_column_id(int32_t id) { m_id = id; }
+        bool matches_exactly(LiteralTypeBitmask mask) override { return m_flags == mask; }
 
-    /**
-     * Get the list of unresolved tokens used for array search
-     *
-     * @return the list of unresolved tokens
-     * FIXME: should be reference?
-     */
-    DescriptorList get_unresolved_tokens() const { return m_unresolved_tokens; }
+    private:
+        DescriptorList m_descriptors;  // list of descriptors describing the column
+        DescriptorList m_unresolved_tokens;  // unresolved tokens used for array search
+        LiteralTypeBitmask m_flags;  // set of types this column can match
+        int32_t m_id;  // unambiguous CLJ column id this column represents. May be unset.
+        bool m_unresolved_descriptors;  // true if contains wildcards
+        bool m_pure_wildcard;  // true if column is single wildcard
 
-    /**
-     * Whether the Column has any unresolved tokens for array search
-     *
-     * @return true if there are unresolved tokens for array search
-     */
-    bool has_unresolved_tokens() const { return !m_unresolved_tokens.empty(); }
+        // Constructors
+        explicit ColumnDescriptor(std::string const&);
 
-    // Safe only if this column has been explicitly set to
-    // only have a single type
-    LiteralType get_literal_type() const { return static_cast<LiteralType>(m_flags); }
+        explicit ColumnDescriptor(std::vector<std::string> const&);
 
-    /**
-     * Whether the list of Descriptor's contains any wildcards
-     * @return true if the descriptor contains any wildcards that need to be resolved
-     */
-    bool is_unresolved_descriptor() const { return m_unresolved_descriptors; }
+        explicit ColumnDescriptor(DescriptorList const&);
 
-    /**
-     * Whether this Column is a single wildcard
-     * @return true if this descriptor is just a single wildcard
-     */
-    bool is_pure_wildcard() const { return m_pure_wildcard; }
-
-private:
-    DescriptorList m_descriptors;  // list of descriptors describing the column
-    DescriptorList m_unresolved_tokens;  // unresolved tokens used for array search
-    LiteralTypeBitmask m_flags;  // set of types this column can match
-    int32_t m_id;  // unambiguous CLJ column id this column represents. May be unset.
-    bool m_unresolved_descriptors;  // true if contains wildcards
-    bool m_pure_wildcard;  // true if column is single wildcard
-
-    explicit ColumnDescriptor(std::string const&);
-    explicit ColumnDescriptor(std::vector<std::string> const&);
-    explicit ColumnDescriptor(DescriptorList const&);
-
-    /**
-     * Scan the list of descriptors to check if they contain
-     * wildcards and set the appropriate flags.
-     */
-    void check_and_set_unresolved_descriptor_flag();
-};
-}  // namespace clp_structured
+        /**
+         * Scan the list of descriptors to check if they contain wildcards and
+         * set the appropriate flags.
+         */
+        void check_and_set_unresolved_descriptor_flag();
+    };
+}}  // namespace clp_structured::search
 
 #endif  // CLP_STRUCTURED_SEARCH_COLUMN_DESCRIPTOR_H

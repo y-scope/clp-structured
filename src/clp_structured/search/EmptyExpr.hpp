@@ -3,39 +3,35 @@
 
 #include "Expression.hpp"
 
-namespace clp_structured {
-/**
- * Class representing the empty set/false. Useful
- * for constant propagation and eliminating expressions.
- */
-class EmptyExpr : public Expression {
-public:
-    void print() override;
-
+namespace clp_structured { namespace search {
     /**
-     * EmptyExpr never has any operands, so we arbitrarily
-     * say that all operands are Expression
+     * Class representing the empty set/false. Useful
+     * for constant propagation and eliminating expressions.
      */
-    bool has_only_expression_operands() override { return true; }
+    class EmptyExpr : public Expression {
+    public:
+        /**
+         * Create an Empty expression which can optionally be attached to a parent
+         * @param parent parent this expression is attached to
+         * @return newly created Empty expression
+         */
+        static std::shared_ptr<Expression> create(Expression* parent = nullptr);
 
-    /**
-     * Deep copy
-     * @return a deep copy of this expression
-     */
-    std::shared_ptr<Expression> copy() const override;
+        // Methods inherited from Value
+        void print() override;
 
-    /**
-     * Create an Empty expression which can optionally be attached to a parent
-     * @param parent parent this expression is attached to
-     * @return newly created Empty expression
-     */
-    static std::shared_ptr<Expression> create(Expression* parent = nullptr);
+        // Methods inherited from Expression
+        // EmptyExpr never has any operands, so we arbitrarily say that all operands are Expression
+        bool has_only_expression_operands() override { return true; }
 
-private:
-    explicit EmptyExpr(Expression* parent = nullptr);
+        std::shared_ptr<Expression> copy() const override;
 
-    EmptyExpr(EmptyExpr const&);
-};
-}  // namespace clp_structured
+    private:
+        // Constructor
+        explicit EmptyExpr(Expression* parent = nullptr);
+
+        EmptyExpr(EmptyExpr const&);
+    };
+}}  // namespace clp_structured::search
 
 #endif  // CLP_STRUCTURED_SEARCH_EMPTY_EXPRESSION_H
