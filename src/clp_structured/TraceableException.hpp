@@ -3,10 +3,9 @@
 #ifndef CLP_STRUCTURED_TRACEABLEEXCEPTION_HPP
 #define CLP_STRUCTURED_TRACEABLEEXCEPTION_HPP
 
-// C++ libraries
 #include <exception>
+#include <string>
 
-// Project headers
 #include "ErrorCode.hpp"
 
 #define __FILENAME__ ((__FILE__) + SOURCE_PATH_SIZE)
@@ -20,7 +19,7 @@ public:
               m_filename(filename),
               m_line_number(line_number) {
         m_message += std::string(m_filename) + ":" + std::to_string(m_line_number)
-                     + "  Error code: " + std::to_string(m_error_code);
+                     + "  Error code: " + std::to_string(m_error_code) + "\n";
     }
 
     // Copy constructor / assignment operators

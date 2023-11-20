@@ -12,11 +12,13 @@ JsonConstructor::JsonConstructor(JsonConstructorOption const& option)
           m_current_archive_index(0),
           m_max_archive_index(0) {
     if (false == boost::filesystem::create_directory(m_output_dir)) {
-        throw OperationFailed(ErrorCodeErrno, __FILENAME__, __LINE__);
+        SPDLOG_ERROR("Can not create directory '{}'", m_output_dir);
+        exit(1);
     }
 
     if (false == boost::filesystem::is_directory(m_archive_dir)) {
-        throw OperationFailed(ErrorCodeBadParam, __FILENAME__, __LINE__);
+        SPDLOG_ERROR("'{}' is not a directory", m_archive_dir);
+        exit(1);
     }
 
     boost::filesystem::directory_iterator iter(m_archive_dir);
@@ -29,7 +31,8 @@ JsonConstructor::JsonConstructor(JsonConstructorOption const& option)
     }
 
     if (m_archive_paths.empty()) {
-        throw OperationFailed(ErrorCodeFileNotFound, __FILENAME__, __LINE__);
+        SPDLOG_ERROR("No archive in '{}'", m_archive_dir);
+        exit(1);
     }
 
     m_max_archive_index = m_archive_paths.size() - 1;

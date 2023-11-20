@@ -13,16 +13,17 @@ JsonParser::JsonParser(JsonParserOption const& option)
           m_schema_id(0),
           m_max_encoding_size(option.max_encoding_size),
           m_timestamp_column(option.timestamp_column) {
+    if (false == boost::filesystem::create_directory(m_output_dir)) {
+        SPDLOG_ERROR("The output directory '{}' already exists", m_output_dir);
+        exit(1);
+    }
+
     if (false == FileUtils::validate_path(option.file_paths)) {
-        throw OperationFailed(ErrorCodeFileNotFound, __FILENAME__, __LINE__);
+        exit(1);
     }
 
     for (auto& file_path : option.file_paths) {
         FileUtils::find_all_files(file_path, m_file_paths);
-    }
-
-    if (false == boost::filesystem::create_directory(m_output_dir)) {
-        throw OperationFailed(ErrorCodeErrno, __FILENAME__, __LINE__);
     }
 
     m_schema_tree = std::make_shared<SchemaTree>();
