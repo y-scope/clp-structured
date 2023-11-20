@@ -1,6 +1,3 @@
-#include <boost/program_options.hpp>
-#include <boost/serialization/export.hpp>
-
 #include "CommandLineArguments.hpp"
 #include "JsonConstructor.hpp"
 #include "JsonParser.hpp"
@@ -16,8 +13,6 @@
 #include "spdlog/sinks/stdout_sinks.h"
 #include "TimestampPattern.hpp"
 #include "Utils.hpp"
-
-namespace po = boost::program_options;
 
 using namespace clp_structured::search;
 
