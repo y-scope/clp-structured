@@ -1,3 +1,5 @@
+// Code from CLP
+
 #include "VariableDecoder.hpp"
 
 namespace clp_structured {

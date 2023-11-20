@@ -1,3 +1,5 @@
+// Code from CLP
+
 #include "Query.hpp"
 
 using std::set;

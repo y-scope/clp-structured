@@ -1,3 +1,5 @@
+// Code from CLP
+
 #include "DictionaryWriter.hpp"
 
 namespace clp_structured {

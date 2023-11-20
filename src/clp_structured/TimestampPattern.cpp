@@ -1,3 +1,5 @@
+// Code from CLP
+
 #include "TimestampPattern.hpp"
 
 // C++ standard libraries

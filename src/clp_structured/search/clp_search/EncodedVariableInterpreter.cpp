@@ -1,3 +1,5 @@
+// Code from CLP
+
 #include "EncodedVariableInterpreter.hpp"
 
 // C++ standard libraries
