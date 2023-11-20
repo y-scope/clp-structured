@@ -3,8 +3,8 @@
 
 #include <memory>
 
-#include "src/clp_structured/Defs.hpp"
 #include "Integral.hpp"
+#include "src/clp_structured/Defs.hpp"
 
 namespace clp_structured { namespace search {
     constexpr LiteralTypeBitmask cDateLiteralTypes = EpochDateT | FloatDateT;

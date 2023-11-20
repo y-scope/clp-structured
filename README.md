@@ -10,12 +10,12 @@ clp-s is a tool that can compress JSON logs efficiently with search capability.
 
 ## Building
 
-* To build, we require some source dependencies, packages from package managers, 
+* To build, we require some source dependencies, packages from package managers,
   and libraries built from source.
 
 ### Source Dependencies
 
-We use both git submodules and third-party source packages. 
+We use both git submodules and third-party source packages.
 To download all, you can run this script:
 
 ```shell
@@ -57,8 +57,8 @@ See the relevant README for your OS:
   cmake --build build -j
   ```
 
-On some machines certain, compiler flags need to be set for the `simdjson` property to prevent it 
-from creating binaries for ISAs that the assembler doesn't support. An example disabling Ice Lake 
+On some machines certain, compiler flags need to be set for the `simdjson` property to prevent it
+from creating binaries for ISAs that the assembler doesn't support. An example disabling Ice Lake
 binaries supporting avx512 can be found commented out in [CMakeLists.txt](CMakeLists.txt).
 
 ## Running
@@ -72,14 +72,14 @@ binaries supporting avx512 can be found commented out in [CMakeLists.txt](CMakeL
 + `archive_dir` specifies the output directory of the compressed logs.
 + `/home/my/log` specifies the path of the log file.
 
-You can also specify zstd compression level and the maximum encoding size of an archive. 
+You can also specify zstd compression level and the maximum encoding size of an archive.
 The encoding size is the in-memory size of dictionaries plus encoded tables. e.g.
 
 ```bash
 ./clp-s c --max-encoding-size 65536 --compression-level 3 archive_dir /home/my/log
 ```
 
-You can also specify one column that should be treated as a timestamp. This will affect 
+You can also specify one column that should be treated as a timestamp. This will affect
 encoding for string timestamps, and will provide a timestamp-range index on that column.
 
 ```bash
@@ -89,11 +89,11 @@ encoding for string timestamps, and will provide a timestamp-range index on that
 ### Decompression
 
 ```bash
-./clp-s x input_dir output_dir
+./clp-s x input_dir archive_dir
 ```
 
 + `archive_dir` specifies the directory of the compressed logs.
-+ `output_dir` specifies the output directory for the decompressed logs.
++ `archive_dir` specifies the output directory for the decompressed logs.
 
 ### Search
 
@@ -105,6 +105,7 @@ encoding for string timestamps, and will provide a timestamp-range index on that
 + `query` specifies a KQL query to run.
 
 Here are some examples of KQL queries. They support field search and wildcard search.
+
 ```
 ts > 1649923037 AND ts <= 1649923038
 id: 22149

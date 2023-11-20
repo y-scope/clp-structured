@@ -6,7 +6,7 @@ namespace clp_structured {
 void ArchiveWriter::open(ArchiveWriterOption const& option) {
     m_id = option.id;
     m_compression_level = option.compression_level;
-    auto archive_path = boost::filesystem::path(option.output_dir) / boost::uuids::to_string(m_id);
+    auto archive_path = boost::filesystem::path(option.archive_dir) / boost::uuids::to_string(m_id);
 
     boost::system::error_code boost_error_code;
     bool path_exists = boost::filesystem::exists(archive_path, boost_error_code);

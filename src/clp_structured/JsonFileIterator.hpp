@@ -2,7 +2,6 @@
 #define CLP_STRUCTURED_JSONFILEITERATOR_HPP
 
 #include "FileReader.hpp"
-
 #include "simdjson.h"
 
 namespace clp_structured {

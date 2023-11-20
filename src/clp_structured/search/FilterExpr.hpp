@@ -18,8 +18,6 @@ namespace clp_structured { namespace search {
      */
     class FilterExpr : public Expression {
     public:
-
-
         /**
          * @return FilterOperation this Filter performs
          */

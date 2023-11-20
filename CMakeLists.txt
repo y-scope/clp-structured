@@ -55,6 +55,8 @@ add_library(clp-s-archive
         src/clp_structured/ColumnReader.hpp
         src/clp_structured/ColumnWriter.cpp
         src/clp_structured/ColumnWriter.hpp
+        src/clp_structured/CommandLineArguments.cpp
+        src/clp_structured/CommandLineArguments.hpp
         src/clp_structured/Compressor.cpp
         src/clp_structured/Compressor.hpp
         src/clp_structured/Decompressor.cpp

@@ -16,7 +16,7 @@
 namespace clp_structured {
 struct ArchiveWriterOption {
     boost::uuids::uuid id;
-    std::string output_dir;
+    std::string archive_dir;
     int compression_level;
 };
 

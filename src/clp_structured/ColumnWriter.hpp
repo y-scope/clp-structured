@@ -6,11 +6,10 @@
 
 #include "DictionaryWriter.hpp"
 #include "FileWriter.hpp"
+#include "simdjson.h"
 #include "TimestampDictionaryWriter.hpp"
 #include "VariableEncoder.hpp"
 #include "ZstdCompressor.hpp"
-
-#include "simdjson.h"
 
 using namespace simdjson;
 

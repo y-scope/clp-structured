@@ -16,11 +16,10 @@
 #include "ParsedMessage.hpp"
 #include "SchemaTree.hpp"
 #include "SchemaWriter.hpp"
+#include "simdjson.h"
 #include "TimestampDictionaryWriter.hpp"
 #include "Utils.hpp"
 #include "ZstdCompressor.hpp"
-
-#include "simdjson.h"
 
 using namespace simdjson;
 
@@ -28,7 +27,7 @@ namespace clp_structured {
 struct JsonParserOption {
     std::vector<std::string> file_paths;
     std::vector<std::string> timestamp_column;
-    std::string output_dir;
+    std::string archive_dir;
     size_t max_encoding_size;
     int compression_level;
 };
@@ -81,7 +80,7 @@ private:
     int m_compression_level;
     int32_t m_schema_id;
     std::vector<std::string> m_file_paths;
-    std::string m_output_dir;
+    std::string m_archive_dir;
     std::string m_schema_tree_path;
 
     std::set<int32_t> m_current_schema;

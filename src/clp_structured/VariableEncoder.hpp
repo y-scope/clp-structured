@@ -7,7 +7,6 @@
 
 #include "DictionaryEntry.hpp"
 #include "DictionaryWriter.hpp"
-
 #include "simdjson.h"
 
 using namespace simdjson;

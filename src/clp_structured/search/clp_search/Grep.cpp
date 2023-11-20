@@ -613,7 +613,8 @@ namespace clp_structured { namespace search { namespace clp_search {
             // - it could be a multi-digit hex value, or
             // - it's directly preceded by an equals sign and contains an alphabet without a
             // wildcard between the equals sign and the first alphabet of the token
-            if (contains_decimal_digit || StringUtils::could_be_multi_digit_hex_value(value, begin_pos, end_pos))
+            if (contains_decimal_digit
+                || StringUtils::could_be_multi_digit_hex_value(value, begin_pos, end_pos))
             {
                 is_var = true;
             } else if (begin_pos > 0 && '=' == value[begin_pos - 1] && contains_alphabet) {
