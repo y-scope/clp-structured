@@ -83,6 +83,8 @@ add_library(clp-s-archive
         src/clp_structured/ParsedMessage.hpp
         src/clp_structured/ReaderUtils.cpp
         src/clp_structured/ReaderUtils.hpp
+        src/clp_structured/SchemaMap.cpp
+        src/clp_structured/SchemaMap.hpp
         src/clp_structured/SchemaTree.cpp
         src/clp_structured/SchemaTree.hpp
         src/clp_structured/SchemaReader.cpp

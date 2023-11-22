@@ -14,6 +14,7 @@
 #include "FileReader.hpp"
 #include "FileWriter.hpp"
 #include "ParsedMessage.hpp"
+#include "SchemaMap.hpp"
 #include "SchemaTree.hpp"
 #include "SchemaWriter.hpp"
 #include "simdjson.h"
@@ -78,13 +79,12 @@ private:
 
     int m_num_messages;
     int m_compression_level;
-    int32_t m_schema_id;
     std::vector<std::string> m_file_paths;
     std::string m_archive_dir;
     std::string m_schema_tree_path;
 
     std::set<int32_t> m_current_schema;
-    std::map<std::set<int32_t>, int32_t> m_schema_to_id;
+    std::shared_ptr<SchemaMap> m_schema_map;
 
     std::shared_ptr<SchemaTree> m_schema_tree;
     ParsedMessage m_current_parsed_message;

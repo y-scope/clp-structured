@@ -10,7 +10,6 @@ JsonParser::JsonParser(JsonParserOption const& option)
         : m_archive_dir(option.archive_dir),
           m_num_messages(0),
           m_compression_level(option.compression_level),
-          m_schema_id(0),
           m_max_encoding_size(option.max_encoding_size),
           m_timestamp_column(option.timestamp_column) {
     if (false == boost::filesystem::create_directory(m_archive_dir)) {
@@ -28,6 +27,8 @@ JsonParser::JsonParser(JsonParserOption const& option)
 
     m_schema_tree = std::make_shared<SchemaTree>();
     m_schema_tree_path = m_archive_dir + "/schema_tree";
+
+    m_schema_map = std::make_shared<SchemaMap>(m_archive_dir, m_compression_level);
 
     m_timestamp_dictionary = std::make_shared<TimestampDictionaryWriter>();
     m_timestamp_dictionary->open(m_archive_dir + "/timestamp.dict", option.compression_level);
@@ -228,16 +229,7 @@ void JsonParser::parse() {
             parse_line((*json_it).value(), -1, "root");
             m_num_messages++;
 
-            int32_t current_schema_id;
-            auto schema_it = m_schema_to_id.find(m_current_schema);
-            if (schema_it != m_schema_to_id.end()) {
-                current_schema_id = schema_it->second;
-            } else {
-                current_schema_id = m_schema_id;
-                m_schema_to_id[m_current_schema] = m_schema_id;
-                m_schema_id++;
-            }
-
+            int32_t current_schema_id = m_schema_map->add_schema(m_current_schema);
             m_current_parsed_message.set_id(current_schema_id);
 
             if (m_archive_writer->get_data_size() >= m_max_encoding_size) {
@@ -280,24 +272,7 @@ void JsonParser::store() {
     schema_tree_compressor.close();
     schema_tree_writer.close();
 
-    FileWriter schema_id_writer;
-    ZstdCompressor schema_id_compressor;
-
-    schema_id_writer.open(m_archive_dir + "/schema_ids", FileWriter::OpenMode::CreateForWriting);
-    schema_id_compressor.open(schema_id_writer, m_compression_level);
-
-    schema_id_compressor.write_numeric_value(m_schema_to_id.size());
-    for (auto& i : m_schema_to_id) {
-        auto schema_ids = i.first;
-        schema_id_compressor.write_numeric_value(i.second);
-        schema_id_compressor.write_numeric_value(schema_ids.size());
-        for (auto const& j : schema_ids) {
-            schema_id_compressor.write_numeric_value(j);
-        }
-    }
-
-    schema_id_compressor.close();
-    schema_id_writer.close();
+    m_schema_map->store();
 
     m_timestamp_dictionary->close();
 }
@@ -314,7 +289,6 @@ void JsonParser::split_archive() {
 }
 
 void JsonParser::close() {
-    m_schema_to_id.clear();
     m_archive_writer->close();
 }
 }  // namespace clp_structured
