@@ -187,7 +187,7 @@ static bool convert_string_to_number_notz(
         num_digits++;
     }
 
-    if (trailing_zero) {
+    if (trailing_zero && num_digits > 1) {
         return false;
     }
 
