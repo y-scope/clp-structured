@@ -55,9 +55,7 @@ CommandLineArguments::parse_arguments(int argc, char const** argv) {
                 std::cerr << "  x - decompress" << std::endl;
                 std::cerr << "  s - search" << std::endl;
                 std::cerr << std::endl;
-                std::cerr << "Try "
-                          << " c --help OR "
-                          << " x --help OR "
+                std::cerr << "Try " << " c --help OR " << " x --help OR "
                           << "q --help for command-specific details." << std::endl;
 
                 po::options_description visible_options;
@@ -81,11 +79,12 @@ CommandLineArguments::parse_arguments(int argc, char const** argv) {
 
         if (Command::Compress == m_command) {
             po::options_description compression_positional_options;
-            compression_positional_options.add_options()
-                    ("archive-dir", po::value<std::string>(&m_archive_dir)->value_name("DIR"),
-                        "output directory")
-                    ("input-paths", po::value<std::vector<std::string>>(&m_file_paths)->
-                        value_name("PATHS"), "input paths");
+            compression_positional_options
+                    .add_options()("archive-dir", po::value<std::string>(&m_archive_dir)->value_name("DIR"), "output directory")(
+                            "input-paths",
+                            po::value<std::vector<std::string>>(&m_file_paths)->value_name("PATHS"),
+                            "input paths"
+                    );
 
             po::options_description compression_options("Compression options");
             compression_options.add_options()
@@ -190,9 +189,9 @@ CommandLineArguments::parse_arguments(int argc, char const** argv) {
             std::string query;
 
             po::options_description search_options;
-            search_options.add_options()("archive-dir", po::value<std::string>(&archive_dir))(
+            search_options.add_options()("archive-dir", po::value<std::string>(&m_archive_dir))(
                     "query,q",
-                    po::value<std::string>(&query)
+                    po::value<std::string>(&m_query)
             );
 
             po::positional_options_description positional_options;
@@ -225,11 +224,11 @@ CommandLineArguments::parse_arguments(int argc, char const** argv) {
                 std::cerr << visible_options << '\n';
                 return ParsingResult::InfoCommand;
             }
-            if (archive_dir.empty()) {
+            if (m_archive_dir.empty()) {
                 throw std::invalid_argument("No archive directory specified");
             }
 
-            if (query.empty()) {
+            if (m_query.empty()) {
                 throw std::invalid_argument("No query specified");
             }
         }
