@@ -108,22 +108,20 @@ static void append_padded_value(int value, char padding_character, size_t length
 static void
 append_padded_value_notz(int value, char padding_character, size_t max_length, string& str) {
     string value_str = to_string(value);
-    if ("0" == value_str) {
-        return;
-    }
-
-    str.append(max_length - value_str.length(), padding_character);
-    size_t last_zero = string::npos;
-    for (size_t last = value_str.size() - 1; last >= 0; --last) {
-        if (value_str[last] == '0') {
-            last_zero = last;
-        } else {
-            break;
+    if ("0" != value_str) {
+        str.append(max_length - value_str.length(), padding_character);
+        size_t last_zero = string::npos;
+        for (size_t last = value_str.size() - 1; last >= 0; --last) {
+            if (value_str[last] == '0') {
+                last_zero = last;
+            } else {
+                break;
+            }
         }
-    }
 
-    if (last_zero != string::npos) {
-        value_str.erase(last_zero, string::npos);
+        if (last_zero != string::npos) {
+            value_str.erase(last_zero, string::npos);
+        }
     }
 
     str += value_str;
@@ -191,7 +189,7 @@ static bool convert_string_to_number_notz(
         num_digits++;
     }
 
-    if (trailing_zero) {
+    if (trailing_zero && num_digits > 1) {
         return false;
     }
 
@@ -205,9 +203,9 @@ static bool convert_string_to_number_notz(
 }
 
 /*
- * To initialize m_known_ts_patterns, we first create a vector of patterns then copy it to a dynamic
- * array. This eases maintenance of the list and the cost doesn't matter since it is only done once
- * when the program starts.
+ * To initialize m_known_ts_patterns, we first create a vector of patterns then copy it to a
+ * dynamic array. This eases maintenance of the list and the cost doesn't matter since it is
+ * only done once when the program starts.
  */
 void TimestampPattern::init() {
     // First create vector of observed patterns so that it's easy to maintain
@@ -264,8 +262,8 @@ void TimestampPattern::init() {
     // E.g. <<<2016-11-10 03:02:29:936
     patterns.emplace_back(0, "<<<%Y-%m-%d %H:%M:%S:%3");
 
-    // TODO These patterns are imprecise and will prevent searching by timestamp; but for now, it's
-    // no worse than not parsing a timestamp E.g. Jan 21 11:56:42
+    // TODO These patterns are imprecise and will prevent searching by timestamp; but for now,
+    // it's no worse than not parsing a timestamp E.g. Jan 21 11:56:42
     patterns.emplace_back(0, "%b %d %H:%M:%S");
     // E.g. 01-21 11:56:42.392
     patterns.emplace_back(0, "%m-%d %H:%M:%S.%3");
