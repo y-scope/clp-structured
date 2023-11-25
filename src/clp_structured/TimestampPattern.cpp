@@ -113,13 +113,17 @@ append_padded_value_notz(int value, char padding_character, size_t max_length, s
     }
 
     str.append(max_length - value_str.length(), padding_character);
-    for (int last = value_str.size() - 1; last >= 0; --last) {
-        if (value_str[last] != '0') {
-            if (last != (value_str.size() - 1)) {
-                value_str.erase(last, string::npos);
-            }
+    size_t last_zero = string::npos;
+    for (size_t last = value_str.size() - 1; last >= 0; --last) {
+        if (value_str[last] == '0') {
+            last_zero = last;
+        } else {
             break;
         }
+    }
+
+    if (last_zero != string::npos) {
+        value_str.erase(last_zero, string::npos);
     }
 
     str += value_str;
@@ -187,7 +191,7 @@ static bool convert_string_to_number_notz(
         num_digits++;
     }
 
-    if (trailing_zero && num_digits > 1) {
+    if (trailing_zero) {
         return false;
     }
 
