@@ -144,11 +144,11 @@ namespace clp_structured { namespace search { namespace clp_search {
         m_sub_queries.push_back(sub_query);
 
         // Add to relevant sub-queries if necessary
-        if (m_all_subqueries_relevant
-            || sub_query.get_ids_of_matching_segments().count(m_prev_segment_id))
-        {
-            m_relevant_sub_queries.push_back(&m_sub_queries.back());
-        }
+        //        if (m_all_subqueries_relevant
+        //            || sub_query.get_ids_of_matching_segments().count(m_prev_segment_id))
+        //        {
+        //            m_relevant_sub_queries.push_back(&m_sub_queries.back());
+        //        }
     }
 
     void Query::clear_sub_queries() {

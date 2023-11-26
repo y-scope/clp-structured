@@ -165,7 +165,8 @@ namespace clp_structured { namespace search {
             std::map<int32_t, std::variant<int64_t, double, std::string, uint8_t>>& extracted_values
     ) {
         m_cur_message = cur_message;
-        for (auto column : m_searched_columns) {
+        m_cached_string_columns.clear();
+        for (auto* column : m_searched_columns) {
             extracted_values[column->get_id()] = column->extract_value(cur_message);
         }
 
@@ -174,8 +175,10 @@ namespace clp_structured { namespace search {
             return false;
         }
 
-        for (auto column : m_other_columns) {
-            extracted_values[column->get_id()] = column->extract_value(cur_message);
+        for (auto* column : m_other_columns) {
+            if (m_cached_string_columns.find(column->get_id()) == m_cached_string_columns.end()) {
+                extracted_values[column->get_id()] = column->extract_value(cur_message);
+            }
         }
 
         return true;
@@ -288,13 +291,12 @@ namespace clp_structured { namespace search {
             std::map<int32_t, std::variant<int64_t, double, std::string, uint8_t>>& extracted_values
     ) {
         auto literal = expr->get_operand();
-        auto column = expr->get_column().get();
-        bool ret = false;
+        auto* column = expr->get_column().get();
         Query* q = m_expr_clp_query[expr];
         std::unordered_set<int64_t>* matching_vars = m_expr_var_match_map[expr];
         auto op = expr->get_operation();
         for (int32_t column_id : m_wildcard_to_searched_clpstrings[column]) {
-            if (evaluate_clp_string_filter(op, q, m_clp_string_readers[column_id], literal)) {
+            if (evaluate_clp_string_filter(op, q, column_id, literal, extracted_values)) {
                 return true;
             }
         }
@@ -393,7 +395,13 @@ namespace clp_structured { namespace search {
             case LiteralType::ClpStringT:
                 q = m_expr_clp_query[expr];
                 clp_reader = m_clp_string_readers[column_id];
-                return evaluate_clp_string_filter(expr->get_operation(), q, clp_reader, literal);
+                return evaluate_clp_string_filter(
+                        expr->get_operation(),
+                        q,
+                        column_id,
+                        literal,
+                        extracted_values
+                );
             case LiteralType::VarStringT:
                 var_reader = m_var_string_readers[column_id];
                 matching_vars = m_expr_var_match_map.at(expr);
@@ -441,7 +449,7 @@ namespace clp_structured { namespace search {
             int64_t value,
             std::shared_ptr<Literal> const& operand
     ) {
-        if (op == FilterOperation::EXISTS || op == FilterOperation::NEXISTS) {
+        if (FilterOperation::EXISTS == op || FilterOperation::NEXISTS == op) {
             return true;
         }
 
@@ -473,7 +481,7 @@ namespace clp_structured { namespace search {
             double value,
             std::shared_ptr<Literal> const& operand
     ) {
-        if (op == FilterOperation::EXISTS || op == FilterOperation::NEXISTS) {
+        if (FilterOperation::EXISTS == op || FilterOperation::NEXISTS == op) {
             return true;
         }
 
@@ -503,38 +511,58 @@ namespace clp_structured { namespace search {
     bool Output::evaluate_clp_string_filter(
             FilterOperation op,
             Query* q,
-            ClpStringColumnReader* reader,
-            std::shared_ptr<Literal> const& operand
-    ) const {
-        if (op == FilterOperation::EXISTS || op == FilterOperation::NEXISTS) {
+            int32_t column_id,
+            std::shared_ptr<Literal> const& operand,
+            std::map<int32_t, std::variant<int64_t, double, std::string, uint8_t>>& extracted_values
+    ) {
+        if (FilterOperation::EXISTS == op || FilterOperation::NEXISTS == op) {
             return true;
         }
 
+        if (op != FilterOperation::EQ && op != FilterOperation::NEQ) {
+            return false;
+        }
+
+        auto* reader = m_clp_string_readers[column_id];
         int64_t id = reader->get_encoded_id(m_cur_message);
         bool matched = false;
-        // Get encoded id and check if it is a log type id
+
         if (q->search_string_matches_all()) {
-            matched = true;
-        } else {
-            auto vars = reader->get_encoded_vars(m_cur_message);
-            for (auto const& subquery : q->get_sub_queries()) {
-                if (subquery.matches_logtype(id)) {
-                    if (subquery.matches_vars(vars)) {
-                        matched = true;
-                        break;
-                    }
-                }
+            return op == FilterOperation::EQ;
+        }
+
+        SubQuery matched_subquery;
+        auto vars = reader->get_encoded_vars(m_cur_message);
+        for (auto const& subquery : q->get_sub_queries()) {
+            if (subquery.matches_logtype(id) && subquery.matches_vars(vars)) {
+                matched = true;
+                matched_subquery = subquery;
+                break;
             }
         }
 
-        switch (op) {
-            case FilterOperation::EQ:
-                return matched;
-            case FilterOperation::NEQ:
-                return !matched;
-            default:
-                return false;
+        if (false == matched) {
+            return op != FilterOperation::EQ;
         }
+
+        if ((q->contains_sub_queries() && matched_subquery.wildcard_match_required())
+            || (!q->contains_sub_queries() && !q->search_string_matches_all()))
+        {
+            std::string decompressed_message
+                    = std::get<std::string>(reader->extract_value(m_cur_message));
+            matched = StringUtils::wildcard_match_unsafe(
+                    decompressed_message,
+                    q->get_search_string(),
+                    !q->get_ignore_case()
+            );
+            matched = (op == FilterOperation::EQ) == matched;
+            if (matched) {
+                extracted_values[column_id] = std::move(decompressed_message);
+                m_cached_string_columns.insert(column_id);
+            }
+        }
+
+        return matched;
     }
 
     bool Output::evaluate_var_string_filter(
@@ -543,7 +571,7 @@ namespace clp_structured { namespace search {
             std::unordered_set<int64_t>* matching_vars,
             std::shared_ptr<Literal> const& operand
     ) const {
-        if (op == FilterOperation::EXISTS || op == FilterOperation::NEXISTS) {
+        if (FilterOperation::EXISTS == op || FilterOperation::NEXISTS == op) {
             return true;
         }
 
@@ -623,7 +651,7 @@ namespace clp_structured { namespace search {
                 int64_t tmp_int;
                 double tmp_float;
                 bool tmp_bool;
-                if (op == FilterOperation::EXISTS || op == FilterOperation::NEXISTS
+                if (FilterOperation::EXISTS == op || FilterOperation::NEXISTS == op
                     || (value.is_number_integer() && operand->as_int(tmp_int, op)
                         && eval(op, value.get<int64_t>(), tmp_int))
                     || (value.is_number_float() && operand->as_float(tmp_float, op)
@@ -809,7 +837,7 @@ namespace clp_structured { namespace search {
             bool value,
             std::shared_ptr<Literal> const& operand
     ) {
-        if (op == FilterOperation::EXISTS || op == FilterOperation::NEXISTS) {
+        if (FilterOperation::EXISTS == op || FilterOperation::NEXISTS == op) {
             return true;
         }
 

@@ -48,6 +48,8 @@ namespace clp_structured { namespace search {
         // variables for the current schema being filtered
         std::vector<BaseColumnReader*> m_searched_columns;
         std::vector<BaseColumnReader*> m_other_columns;
+        std::set<int32_t> m_cached_string_columns;
+
         int32_t m_schema;
         SchemaReader* m_reader;
 
@@ -134,9 +136,9 @@ namespace clp_structured { namespace search {
 
         /**
          * Evaluates a int filter expression
-         * @param expr
-         * @param schema
-         * @param extracted_values
+         * @param op
+         * @param value
+         * @param operand
          * @return true if the expression evaluates to true, false otherwise
          */
         static bool evaluate_int_filter(
@@ -147,9 +149,9 @@ namespace clp_structured { namespace search {
 
         /**
          * Evaluates a float filter expression
-         * @param expr
-         * @param schema
-         * @param extracted_values
+         * @param op
+         * @param value
+         * @param operand
          * @return true if the expression evaluates to true, false otherwise
          */
         static bool evaluate_float_filter(
@@ -160,23 +162,28 @@ namespace clp_structured { namespace search {
 
         /**
          * Evaluates a clp string filter expression
-         * @param expr
-         * @param schema
+         * @param op
+         * @param q
+         * @param column_id
+         * @param operand
          * @param extracted_values
          * @return true if the expression evaluates to true, false otherwise
          */
         bool evaluate_clp_string_filter(
                 FilterOperation op,
                 Query* q,
-                ClpStringColumnReader* reader,
-                std::shared_ptr<Literal> const& operand
-        ) const;
+                int32_t column_id,
+                std::shared_ptr<Literal> const& operand,
+                std::map<int32_t, std::variant<int64_t, double, std::string, uint8_t>>&
+                        extracted_values
+        );
 
         /**
          * Evaluates a var string filter expression
-         * @param expr
-         * @param schema
-         * @param extracted_values
+         * @param op
+         * @param reader
+         * @param matching_vars
+         * @param operand
          * @return true if the expression evaluates to true, false otherwise
          */
         bool evaluate_var_string_filter(
@@ -188,9 +195,9 @@ namespace clp_structured { namespace search {
 
         /**
          * Evaluates a epoch date string filter expression
-         * @param expr
-         * @param schema
-         * @param extracted_values
+         * @param op
+         * @param reader
+         * @param operand
          * @return true if the expression evaluates to true, false otherwise
          */
         bool evaluate_epoch_date_filter(
@@ -214,9 +221,10 @@ namespace clp_structured { namespace search {
 
         /**
          * Evaluates an array filter expression
-         * @param expr
-         * @param schema
-         * @param extracted_values
+         * @param op
+         * @param unresolved_tokens
+         * @param value
+         * @param operand
          * @return true if the expression evaluates to true, false otherwise
          */
         bool evaluate_array_filter(
@@ -248,9 +256,9 @@ namespace clp_structured { namespace search {
 
         /**
          * Evaluates a wildcard array filter expression
-         * @param expr
-         * @param schema
-         * @param extracted_values
+         * @param op
+         * @param value
+         * @param operand
          * @return true if the expression evaluates to true, false otherwise
          */
         bool evaluate_wildcard_array_filter(
@@ -287,9 +295,9 @@ namespace clp_structured { namespace search {
 
         /**
          * Evaluates a bool filter expression
-         * @param expr
-         * @param schema
-         * @param extracted_values
+         * @param op
+         * @param value
+         * @param operand
          * @return true if the expression evaluates to true, false otherwise
          */
         static bool evaluate_bool_filter(
