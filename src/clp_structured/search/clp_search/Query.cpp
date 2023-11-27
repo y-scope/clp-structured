@@ -142,31 +142,9 @@ namespace clp_structured { namespace search { namespace clp_search {
 
     void Query::add_sub_query(SubQuery const& sub_query) {
         m_sub_queries.push_back(sub_query);
-
-        // Add to relevant sub-queries if necessary
-        //        if (m_all_subqueries_relevant
-        //            || sub_query.get_ids_of_matching_segments().count(m_prev_segment_id))
-        //        {
-        //            m_relevant_sub_queries.push_back(&m_sub_queries.back());
-        //        }
     }
 
     void Query::clear_sub_queries() {
         m_sub_queries.clear();
-        m_relevant_sub_queries.clear();
-        m_all_subqueries_relevant = true;
-    }
-
-    void Query::make_all_sub_queries_relevant() {
-        if (m_all_subqueries_relevant) {
-            // All sub-queries already relevant
-            return;
-        }
-
-        m_relevant_sub_queries.clear();
-        for (auto& sub_query : m_sub_queries) {
-            m_relevant_sub_queries.push_back(&sub_query);
-        }
-        m_all_subqueries_relevant = true;
     }
 }}}  // namespace clp_structured::search::clp_search

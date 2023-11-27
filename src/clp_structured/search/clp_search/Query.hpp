@@ -158,19 +158,7 @@ namespace clp_structured { namespace search { namespace clp_search {
     class Query {
     public:
         // Constructors
-        Query()
-                : m_search_begin_timestamp(cEpochTimeMin),
-                  m_search_end_timestamp(cEpochTimeMax),
-                  m_ignore_case(false),
-                  m_search_string_matches_all(true),
-                  m_all_subqueries_relevant(true) {}
-
-        // Methods
-        void set_search_begin_timestamp(epochtime_t timestamp) {
-            m_search_begin_timestamp = timestamp;
-        }
-
-        void set_search_end_timestamp(epochtime_t timestamp) { m_search_end_timestamp = timestamp; }
+        Query() : m_ignore_case(false), m_search_string_matches_all(true) {}
 
         void set_ignore_case(bool ignore_case) { m_ignore_case = ignore_case; }
 
@@ -179,21 +167,6 @@ namespace clp_structured { namespace search { namespace clp_search {
         void add_sub_query(SubQuery const& sub_query);
 
         void clear_sub_queries();
-
-        /**
-         * Populates the set of relevant sub-queries with all possible sub-queries from the query
-         */
-        void make_all_sub_queries_relevant();
-
-        /**
-         * Checks if the given timestamp is in the search time range (begin and end inclusive)
-         * @param timestamp
-         * @return true if the timestamp is in the search time range
-         * @return false otherwise
-         */
-        bool timestamp_is_in_search_time_range(epochtime_t timestamp) const {
-            return (m_search_begin_timestamp <= timestamp && timestamp <= m_search_end_timestamp);
-        }
 
         bool get_ignore_case() const { return m_ignore_case; }
 
@@ -210,22 +183,12 @@ namespace clp_structured { namespace search { namespace clp_search {
 
         bool contains_sub_queries() const { return m_sub_queries.empty() == false; }
 
-        std::vector<SubQuery const*> const& get_relevant_sub_queries() const {
-            return m_relevant_sub_queries;
-        }
-
     private:
         // Variables
-        // Start of search time range (inclusive)
-        epochtime_t m_search_begin_timestamp;
-        // End of search time range (inclusive)
-        epochtime_t m_search_end_timestamp;
         bool m_ignore_case;
         std::string m_search_string;
         std::vector<SubQuery> m_sub_queries;
         std::vector<SubQuery const*> m_relevant_sub_queries;
-        segment_id_t m_prev_segment_id;
-        bool m_all_subqueries_relevant;
         bool m_search_string_matches_all;
     };
 }}}  // namespace clp_structured::search::clp_search
