@@ -531,38 +531,33 @@ namespace clp_structured { namespace search {
             return op == FilterOperation::EQ;
         }
 
-        SubQuery matched_subquery;
         auto vars = reader->get_encoded_vars(m_cur_message);
         for (auto const& subquery : q->get_sub_queries()) {
             if (subquery.matches_logtype(id) && subquery.matches_vars(vars)) {
                 matched = true;
-                matched_subquery = subquery;
-                break;
+
+                if ((q->contains_sub_queries() && subquery.wildcard_match_required())
+                    || (!q->contains_sub_queries() && !q->search_string_matches_all()))
+                {
+                    std::string decompressed_message
+                            = std::get<std::string>(reader->extract_value(m_cur_message));
+                    matched = StringUtils::wildcard_match_unsafe(
+                            decompressed_message,
+                            q->get_search_string(),
+                            !q->get_ignore_case()
+                    );
+                    matched = (op == FilterOperation::EQ) == matched;
+                    if (matched) {
+                        extracted_values[column_id] = std::move(decompressed_message);
+                        m_cached_string_columns.insert(column_id);
+                    }
+                }
+
+                return matched;
             }
         }
 
-        if (false == matched) {
-            return op != FilterOperation::EQ;
-        }
-
-        if ((q->contains_sub_queries() && matched_subquery.wildcard_match_required())
-            || (!q->contains_sub_queries() && !q->search_string_matches_all()))
-        {
-            std::string decompressed_message
-                    = std::get<std::string>(reader->extract_value(m_cur_message));
-            matched = StringUtils::wildcard_match_unsafe(
-                    decompressed_message,
-                    q->get_search_string(),
-                    !q->get_ignore_case()
-            );
-            matched = (op == FilterOperation::EQ) == matched;
-            if (matched) {
-                extracted_values[column_id] = std::move(decompressed_message);
-                m_cached_string_columns.insert(column_id);
-            }
-        }
-
-        return matched;
+        return (op == FilterOperation::EQ) == matched;
     }
 
     bool Output::evaluate_var_string_filter(

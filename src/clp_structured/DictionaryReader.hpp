@@ -51,7 +51,7 @@ public:
      * @param id
      * @return The entry with the given ID
      */
-    EntryType const& get_entry(DictionaryIdType id) const;
+    EntryType& get_entry(DictionaryIdType id);
 
     /**
      * @param id
@@ -150,8 +150,7 @@ void DictionaryReader<DictionaryIdType, EntryType>::read_new_entries(bool lazy) 
 }
 
 template <typename DictionaryIdType, typename EntryType>
-EntryType const& DictionaryReader<DictionaryIdType, EntryType>::get_entry(DictionaryIdType id
-) const {
+EntryType& DictionaryReader<DictionaryIdType, EntryType>::get_entry(DictionaryIdType id) {
     if (false == m_is_open) {
         throw OperationFailed(ErrorCodeNotInit, __FILENAME__, __LINE__);
     }
