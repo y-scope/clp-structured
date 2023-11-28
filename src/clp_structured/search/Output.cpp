@@ -536,9 +536,7 @@ namespace clp_structured { namespace search {
             if (subquery.matches_logtype(id) && subquery.matches_vars(vars)) {
                 matched = true;
 
-                if ((q->contains_sub_queries() && subquery.wildcard_match_required())
-                    || (!q->contains_sub_queries() && !q->search_string_matches_all()))
-                {
+                if (subquery.wildcard_match_required()) {
                     std::string decompressed_message
                             = std::get<std::string>(reader->extract_value(m_cur_message));
                     matched = StringUtils::wildcard_match_unsafe(
@@ -551,9 +549,10 @@ namespace clp_structured { namespace search {
                         extracted_values[column_id] = std::move(decompressed_message);
                         m_cached_string_columns.insert(column_id);
                     }
+                    return matched;
                 }
 
-                return matched;
+                break;
             }
         }
 
