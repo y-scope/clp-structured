@@ -90,7 +90,7 @@ namespace clp_structured { namespace search { namespace clp_search {
     ) {
         m_possible_logtype_ids.clear();
 
-        for (auto entry : logtype_entries) {
+        for (const auto *entry : logtype_entries) {
             m_possible_logtype_ids.insert(entry->get_id());
         }
         m_possible_logtype_entries = logtype_entries;

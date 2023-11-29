@@ -65,10 +65,10 @@ namespace clp_structured { namespace search {
         std::map<std::string, std::unordered_set<int64_t>> m_string_var_match_map;
         std::unordered_map<Expression*, Query*> m_expr_clp_query;
         std::unordered_map<Expression*, std::unordered_set<int64_t>*> m_expr_var_match_map;
-        std::map<int32_t, ClpStringColumnReader*> m_clp_string_readers;
-        std::map<int32_t, VariableStringColumnReader*> m_var_string_readers;
-        std::map<int32_t, DateStringColumnReader*> m_datestring_readers;
-        std::map<int32_t, FloatDateStringColumnReader*> m_floatdatestring_readers;
+        std::unordered_map<int32_t, ClpStringColumnReader*> m_clp_string_readers;
+        std::unordered_map<int32_t, VariableStringColumnReader*> m_var_string_readers;
+        std::unordered_map<int32_t, DateStringColumnReader*> m_datestring_readers;
+        std::unordered_map<int32_t, FloatDateStringColumnReader*> m_floatdatestring_readers;
         uint64_t m_cur_message;
         EvaluatedValue m_expression_value;
 

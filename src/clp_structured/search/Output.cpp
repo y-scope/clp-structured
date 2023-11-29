@@ -199,8 +199,8 @@ namespace clp_structured { namespace search {
             return true;
         }
 
-        std::stack<CurExpr> parent_type;
-        std::stack<OpList::iterator> parent_it;
+        std::stack<CurExpr, std::vector<CurExpr>> parent_type;
+        std::stack<OpList::iterator, std::vector<OpList::iterator>> parent_it;
 
         Expression* cur = expr;
         CurExpr cur_type = CurExpr::FILTER;

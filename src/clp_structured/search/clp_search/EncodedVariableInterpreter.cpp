@@ -73,7 +73,7 @@ namespace clp_structured { namespace search { namespace clp_search {
 
         // Encode matches
         unordered_set<encoded_variable_t> encoded_vars;
-        for (auto entry : var_dict_entries) {
+        for (auto const* entry : var_dict_entries) {
             encoded_vars.insert(VariableEncoder::encode_var_dict_id(entry->get_id()));
         }
 
