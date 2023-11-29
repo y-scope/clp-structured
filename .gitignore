@@ -1,0 +1,11 @@
+.idea/
+cmake-*/
+*.json
+*.py
+!tools/scripts/deps-download/*.json
+!tools/scripts/deps-download/*.py
+.vscode/
+build/
+third_party/
+venv
+*Kibana/.antlr

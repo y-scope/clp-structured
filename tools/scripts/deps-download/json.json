@@ -1,0 +1,10 @@
+{
+  "url": "https://github.com/nlohmann/json/archive/refs/tags/v3.10.4.zip",
+  "unzip": true,
+  "targets": [
+    {
+      "source": "nlohmann_json-3.10.4",
+      "destination": "submodules/nlohmann_json"
+    }
+  ]
+}

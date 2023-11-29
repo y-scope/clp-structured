@@ -1,0 +1,15 @@
+[submodule "submodules/nlohmann_json"]
+	path = submodules/nlohmann_json
+	url = https://github.com/nlohmann/json.git
+[submodule "submodules/simdjson"]
+	path = submodules/simdjson
+	url = https://github.com/simdjson/simdjson.git
+[submodule "submodules/spdlog"]
+	path = submodules/spdlog
+	url = https://github.com/gabime/spdlog.git
+[submodule "submodules/date"]
+	path = submodules/date
+	url = https://github.com/HowardHinnant/date.git
+[submodule "submodules/abseil-cpp"]
+	path = submodules/abseil-cpp
+	url = https://github.com/abseil/abseil-cpp.git
